@@ -46,6 +46,7 @@ To be adjusted via command line (or in AS5600.h file)
 
 - **AS5600_CLOCK_WISE             1**
 - **AS5600_COUNTERCLOCK_WISE      0**
+- **AS5600_RAW_TO_DEGREES         0.0879120879120879121**
 
 
 ### Constructor + I2C

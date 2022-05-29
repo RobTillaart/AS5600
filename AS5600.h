@@ -17,7 +17,7 @@
 #define AS5600_CLOCK_WISE               1
 #define AS5600_COUNTERCLOCK_WISE        0
 
-
+#define AS5600_RAW_TO_DEGREES           (0.0879120879120879121)
 
 class AS5600
 {
@@ -74,7 +74,6 @@ public:
 
   void     setWatchDog(uint8_t mask);          // 0..1
   uint8_t  getWatchDog();
-
 
 
   //  OUTPUT REGISTERS

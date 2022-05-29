@@ -1,5 +1,5 @@
 //
-//    FILE: AS5600_demo.ino
+//    FILE: AS5600_demo_status.ino
 //  AUTHOR: Rob Tillaart
 // PURPOSE: demo
 //    DATE: 2022-05-28
@@ -27,11 +27,15 @@ void setup()
 
 void loop()
 {
-  Serial.print(millis());
-  Serial.print("\t");
-  Serial.print(as5600.readAngle());
-  Serial.print("\t");
-  Serial.println(as5600.rawAngle() * AS5600_RAW_TO_DEGREES);
+  Serial.print("STATUS:\t ");
+  Serial.println(as5600.readStatus(), HEX);
+  Serial.print("CONFIG:\t ");
+  Serial.println(as5600.getConfigure(), HEX);
+  Serial.print("   AGC:\t ");
+  Serial.println(as5600.readAGC(), HEX);
+  Serial.print("MAGNET:\t ");
+  Serial.println(as5600.readMagnitude(), HEX);
+  Serial.println();
 
   delay(1000);
 }
