@@ -98,7 +98,8 @@ Please read datasheet for details.
 
 ### Read Angle
 
-- **uint16_t rawAngle()** idem.
+- **uint16_t rawAngle()** idem. returns 0 .. 4095. 
+Conversion factor to degrees = 360 / 4095 = 0.0879121  
 - **uint16_t readAngle()** read the angle from the sensor. 
 This is the one most used.
 
@@ -110,6 +111,7 @@ This is the one most used.
 0..255 in 5V mode, 0..128 in 3V3 mode.
 - **uint16_t readMagnitude()** reads the current internal magnitude.
 Meaning or scale is unclear. 
+- **bool detectMagnet()** returns true if device sees a magnet.
 
 
 #### Status bits
@@ -179,12 +181,17 @@ Some ideas are kept here so they won't get lost.
 - improve documentation
 - get hardware to test.
 - write examples
-
+- add functions
+  - **setOutputMode()** + constants.
+  - **setPowerMode()** + constants
+- **magnetStrength()**  
+  - combination of AGC and MD, ML and MH flags?
+- do we need **ANGLE_FACTOR** = 0.0879121
 
 ### low prio
 
 - unit test
 - error handling?
 - test I2C speeds.
-- expand configure registers details in interface
+
 

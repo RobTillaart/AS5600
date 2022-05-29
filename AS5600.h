@@ -33,7 +33,8 @@ public:
   uint8_t  getAddress() { return _address; };  //  0x36
 
 
-  //  CONFIGURE - read datasheet 
+  //  CONFIGURE
+  //  read datasheet first
   void     setDirection(uint8_t direction = AS5600_CLOCK_WISE);
   uint8_t  getDirection();
 
@@ -48,8 +49,32 @@ public:
   void     setMaxAngle(uint16_t value);
   uint16_t getMaxAngle();
 
+  //  access the whole configuration register
   void     setConfigure(uint16_t value);
   uint16_t getConfigure();
+
+  //  details configure
+  void     setPowerMode(uint8_t powerMode);    // 0..3
+  uint8_t  getPowerMode();
+
+  void     setHysteresis(uint8_t hysteresis);  // 0..3
+  uint8_t  getHysteresis();
+
+  void     setOutputMode(uint8_t outputMode);  // 0..2
+  uint8_t  getOutputMode();
+
+  void     setPWMFrequency(uint8_t pwmFreq);   // 0..3
+  uint8_t  getPWMFrequency();
+
+  void     setSlowFilter(uint8_t mask);        // 0..3
+  uint8_t  getSlowFilter();
+
+  void     setFastFilter(uint8_t mask);        // 0..7
+  uint8_t  getFastFilter();
+
+  void     setWatchDog(uint8_t mask);          // 0..1
+  uint8_t  getWatchDog();
+
 
 
   //  OUTPUT REGISTERS
@@ -61,6 +86,9 @@ public:
   uint8_t  readStatus();
   uint8_t  readAGC();
   uint16_t readMagnitude();
+
+  //  detail status
+  bool     detectMagnet();
 
 
   //  BURN COMMANDS
