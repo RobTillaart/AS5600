@@ -57,6 +57,7 @@ unittest(test_constructor)
 {
   AS5600 as5600;
 
+  as5600.begin(4);
   assertFalse(as5600.isConnected());
 }
 
@@ -65,10 +66,28 @@ unittest(test_address)
 {
   AS5600 as5600;
 
+  as5600.begin(4);
   assertEqual(0x36, as5600.getAddress());
 }
 
 
+unittest(test_direction)
+{
+  AS5600 as5600;
+
+  as5600.begin(4);
+  
+  as5600.setDirection();
+  assertEqual(AS5600_CLOCK_WISE, as5600.getDirection());
+
+  as5600.setDirection(AS5600_COUNTERCLOCK_WISE);
+  assertEqual(AS5600_COUNTERCLOCK_WISE, as5600.getDirection());
+
+  as5600.setDirection(AS5600_CLOCK_WISE);
+  assertEqual(AS5600_CLOCK_WISE, as5600.getDirection());
+}
+
+// FOR REMAINING ONE NEED A STUB
 
 unittest_main()
 
