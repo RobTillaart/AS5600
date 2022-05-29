@@ -57,7 +57,7 @@ unittest(test_constructor)
 {
   AS5600 as5600;
 
-  assertTrue(as5600.isConnected());
+  assertFalse(as5600.isConnected());
 }
 
 
