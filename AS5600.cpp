@@ -362,7 +362,7 @@ float AS5600::getAngularSpeed()
   int      deltaA  = angle - _lastAngle;
   _lastMeasurement = now;
   _lastAngle       = angle;
-  return (deltaA * 1e6) / deltaT;
+  return (deltaA * 1e6 * AS5600_RAW_TO_DEGREES) / deltaT;
 }
 
 
