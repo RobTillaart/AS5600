@@ -15,23 +15,37 @@ Arduino library for AS5600 magnetic rotation meter.
 
 ### AS5600
 
-**AS5600** is a library for a AS5600 magnetic rotation meter.
+**AS5600** is a library for an AS5600 based magnetic rotation meter.
 
 **Warning: experimental - not tested yet**
 
 TODO: buy hardware to test the library.
 
+
+### I2C Address
+
 The I2C address of the **AS5600** is always 0x36.
-
-To use more than one **AS5600** on one I2C bus, one needs an I2C multiplexer, 
-e.g. https://github.com/RobTillaart/TCA9548 
+To use more than one **AS5600** on one I2C bus, see Multiplexing below.
 
 
+### OUT pin
+
+The sensor has an analogue output **OUT** that can be used for analog or PWM 
+output. This interface is not further investigated.
 
 
-### GPO pin
+### PGO pin
 
-TODO
+PGO stand for Programming Option, it is used to calibrate / program the sensor.
+See datasheet for a detailed list of steps to be done.
+
+TODO elaborate?
+
+
+## Hardware connection
+
+include schematic  sensor  -- processor
+
 
 
 ## Interface
@@ -39,15 +53,37 @@ TODO
 The I2C address of the **AS5600** is always 0x36.
 
 
+### Constants
 
-### Defines
+**NOT** to be adjusted.
 
-To be adjusted via command line (or in AS5600.h file)
+```cpp
+//  setDirection
+const uint8_t AS5600_CLOCK_WISE         = 0;  // LOW
+const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;   // HIGH
 
-- **AS5600_CLOCK_WISE             1**
-- **AS5600_COUNTERCLOCK_WISE      0**
-- **AS5600_RAW_TO_DEGREES         0.0879120879120879121**
-- **AS5600_RAW_TO_RADIANS         0.00153435538636864138630654133494**
+const float   AS5600_RAW_TO_DEGREES     = 0.0879120879120879121;
+const float   AS5600_RAW_TO_RADIANS     = 0.00153435538636864138630654133494;
+
+//  getAngularSpeed
+const uint8_t AS5600_MODE_DEGREES       = 0;
+const uint8_t AS5600_MODE_RADIANS       = 1;
+
+//  setOutputMode
+const uint8_t AS5600_OUTMODE_ANALOG_100 = 0;
+const uint8_t AS5600_OUTMODE_ANALOG_90  = 1;
+const uint8_t AS5600_OUTMODE_PWM        = 2;
+
+//  setPWMFrequency
+const uint8_t AS5600_PWM_115            = 0;
+const uint8_t AS5600_PWM_230            = 1;
+const uint8_t AS5600_PWM_460            = 2;
+const uint8_t AS5600_PWM_920            = 3;
+
+//  setWatchDog
+const uint8_t AS5600_WATCHDOG_OFF       = 0;
+const uint8_t AS5600_WATCHDOG_ON        = 1;
+```
 
 
 ### Constructor + I2C
@@ -108,15 +144,15 @@ This is the one most used.
 
 ### Angular Speed
 
-- **getAngularSpeed(uint8_t mode = 0)** is an experimental function that returns 
+- **getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES)** is an experimental function that returns 
 an approximation of the angular speed in rotations per second.
 The function needs to be called at least **four** times per rotation
 to get a reasonably accuracy. 
 
 (0.1.3 added mode parameter).
-- mode == 1: radians /second
-- mode == 0: degrees /second (default)
-- mode == ?: degrees /second
+- mode == AS5600_MODE_RADIANS (1): radians /second
+- mode == AS5600_MODE_DEGREES (0): degrees /second (default)
+- mode other => degrees /second
 
 Negative values indicate reverse rotation. 
 What that means depends on the setup of your project.
@@ -172,6 +208,18 @@ You can only burn a new Angle maximum **THREE** times to the AS5600.
 You can write this only **ONE** time to the AS5600.
 
 
+## Multiplexing
+
+The I2C address of the **AS5600** is always 0x36.
+
+To use more than one **AS5600** on one I2C bus, one needs an I2C multiplexer, 
+e.g. https://github.com/RobTillaart/TCA9548.
+Alternative could be the use of a AND port for the I2C clock line to prevent 
+the sensor from listening to signals on the I2C bus. 
+
+Finally the sensor has an analog output **OUT** that could be used which would
+allow multiple sensors connected to e.g. one Arduino UNO. This is not further investigated.
+
 
 ## Operational
 
@@ -208,9 +256,9 @@ Some ideas are kept here so they won't get lost.
 
 ### high prio
 
-- improve documentation
-- improve performance (I2C issue)
 - get hardware to test.
+- improve documentation
+- investigate PGO programming pin.
 - write examples
   - as5600_calibration.ino ?
 - add functions
@@ -218,7 +266,6 @@ Some ideas are kept here so they won't get lost.
   - **setPowerMode()** + constants
 - **magnetStrength()**  
   - combination of AGC and MD, ML and MH flags?
-- do we need **ANGLE_FACTOR** = 0.0879121
 
 
 ### low prio
