@@ -27,6 +27,9 @@ const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4095.0;
 const uint8_t AS5600_MODE_DEGREES       = 0;
 const uint8_t AS5600_MODE_RADIANS       = 1;
 
+//  CONFIGURE CONSTANTS
+//  check datasheet for details
+
 //  setOutputMode
 const uint8_t AS5600_OUTMODE_ANALOG_100 = 0;
 const uint8_t AS5600_OUTMODE_ANALOG_90  = 1;
@@ -43,6 +46,28 @@ const uint8_t AS5600_PWM_115            = 0;
 const uint8_t AS5600_PWM_230            = 1;
 const uint8_t AS5600_PWM_460            = 2;
 const uint8_t AS5600_PWM_920            = 3;
+
+//  setHysteresis
+const uint8_t AS5600_HYST_OFF           = 0;
+const uint8_t AS5600_HYST_LSB1          = 1;
+const uint8_t AS5600_HYST_LSB2          = 2;
+const uint8_t AS5600_HYST_LSB3          = 3;
+
+//  setSlowFilter
+const uint8_t AS5600_SLOW_FILT_16X      = 0;
+const uint8_t AS5600_SLOW_FILT_8X       = 1;
+const uint8_t AS5600_SLOW_FILT_4X       = 2;
+const uint8_t AS5600_SLOW_FILT_2X       = 3;
+
+//  setFastFilter
+const uint8_t AS5600_FAST_FILT_NONE     = 0;
+const uint8_t AS5600_FAST_FILT_LSB6     = 1;
+const uint8_t AS5600_FAST_FILT_LSB7     = 2;
+const uint8_t AS5600_FAST_FILT_LSB9     = 3;
+const uint8_t AS5600_FAST_FILT_LSB18    = 4;
+const uint8_t AS5600_FAST_FILT_LSB21    = 5;
+const uint8_t AS5600_FAST_FILT_LSB24    = 6;
+const uint8_t AS5600_FAST_FILT_LSB10    = 7;
 
 //  setWatchDog
 const uint8_t AS5600_WATCHDOG_OFF       = 0;
@@ -83,38 +108,42 @@ public:
   uint16_t getMaxAngle();
 
   //  access the whole configuration register
+  //  check datasheet for bit fields
   void     setConfigure(uint16_t value);
   uint16_t getConfigure();
 
   //  access details of the configuration register
   //  0 = Normal
   //  1,2,3 are low power mode - check datasheet
-  void     setPowerMode(uint8_t powerMode);    // 0..3
+  void     setPowerMode(uint8_t powerMode);
   uint8_t  getPowerMode();
 
-  //  hysteresis = nr of LSB
-  void     setHysteresis(uint8_t hysteresis);  // 0..3
+  //  0 = off    1 = lsb1    2 = lsb2    3 = lsb3
+  void     setHysteresis(uint8_t hysteresis);
   uint8_t  getHysteresis();
 
   //  0 = analog 0-100%
   //  1 = analog 10-90%
   //  2 = PWM
-  void     setOutputMode(uint8_t outputMode);  // 0..2
+  void     setOutputMode(uint8_t outputMode);
   uint8_t  getOutputMode();
 
   //  0 = 115    1 = 230    2 = 460    3 = 920 (Hz)
-  void     setPWMFrequency(uint8_t pwmFreq);   // 0..3
+  void     setPWMFrequency(uint8_t pwmFreq);
   uint8_t  getPWMFrequency();
 
-  void     setSlowFilter(uint8_t mask);        // 0..3
+  //  0 = 16x    1 = 8x     2 = 4x     3 = 2x
+  void     setSlowFilter(uint8_t mask);
   uint8_t  getSlowFilter();
 
-  void     setFastFilter(uint8_t mask);        // 0..7
+  //  0 = none   1 = LSB6   2 = LSB7   3 = LSB9
+  //  4 = LSB18  5 = LSB21  6 = LSB24  7 = LSB10
+  void     setFastFilter(uint8_t mask);
   uint8_t  getFastFilter();
 
   //  0 = OFF
   //  1 = ON   (auto low power mode)
-  void     setWatchDog(uint8_t mask);          // 0..1
+  void     setWatchDog(uint8_t mask);
   uint8_t  getWatchDog();
 
 

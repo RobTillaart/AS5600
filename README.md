@@ -36,8 +36,6 @@ To use more than one **AS5600** on one I2C bus, see Multiplexing below.
 
 ### OUT pin
 
-Not tested.
-
 The sensor has an output pin named **OUT**.
 This pin can be used for an analogue or PWM output signal. 
 Examples are added to show how to use this pin with **setOutputMode()**.
@@ -60,13 +58,16 @@ See also **Make configuration persistent** below.
 The sensor should connect the I2C lines SDA and SCL and the
 VCC and GND to communicate with the processor.
 The DIR (direction) pin of the sensor should be connected to:
-- GND = fixed clockwise
+- GND = fixed clockwise(\*)
 - VCC = fixed counter clock wise
 - a free IO pin of the processor = library control.
 
-In the latter setup the library can control the direction of counting by initializing this pin in **begin(pin)**, followed by **setDirection(direction)**. For the direction the library defines two constants named:
+In the latter setup the library can control the direction of counting by initializing this pin in **begin(directionPin)**, followed by **setDirection(direction)**. For the direction the library defines two constants named:
 - **AS5600_CLOCK_WISE (0)**
 - **AS5600_COUNTERCLOCK_WISE (1)**
+
+(\*) if **begin()** is called without **directionPin** or with this parameter set to 255, software direction control is enabled.
+See below for more information.
 
 
 ## Interface
@@ -76,41 +77,25 @@ The I2C address of the **AS5600** is always 0x36.
 
 ### Constants
 
-**NOT** to be adjusted.
+Most important are:
 
 ```cpp
 //  setDirection
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
 const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
 
-const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4095.0;   //  0.0879120879120879121;
-const float   AS5600_RAW_TO_RADIANS     = 2 * PI / 4095.0;  //  0.00153435538636864138630654133494;
+//  0.0879120879120879121;
+const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4095.0;
+//  0.00153435538636864138630654133494;
+const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4095.0;
 
 //  getAngularSpeed
 const uint8_t AS5600_MODE_DEGREES       = 0;
 const uint8_t AS5600_MODE_RADIANS       = 1;
-
-//  setOutputMode
-const uint8_t AS5600_OUTMODE_ANALOG_100 = 0;
-const uint8_t AS5600_OUTMODE_ANALOG_90  = 1;
-const uint8_t AS5600_OUTMODE_PWM        = 2;
-
-//  setPowerMode
-const uint8_t AS5600_POWERMODE_NOMINAL  = 0;
-const uint8_t AS5600_POWERMODE_LOW1     = 1;
-const uint8_t AS5600_POWERMODE_LOW2     = 2;
-const uint8_t AS5600_POWERMODE_LOW3     = 3;
-
-//  setPWMFrequency
-const uint8_t AS5600_PWM_115            = 0;
-const uint8_t AS5600_PWM_230            = 1;
-const uint8_t AS5600_PWM_460            = 2;
-const uint8_t AS5600_PWM_920            = 3;
-
-//  setWatchDog
-const uint8_t AS5600_WATCHDOG_OFF       = 0;
-const uint8_t AS5600_WATCHDOG_ON        = 1;
 ```
+
+See AS5600.h file (and datasheet) for all constants.
+Also Configuration bits below for configuration related ones.
 
 
 ### Constructor + I2C
@@ -122,21 +107,22 @@ See below.
 - **bool begin(int sda, int scl, uint8_t directionPin = 255)** idem, for the ESP32 where one can choose the I2C pins.
 If the pin is set to 255, the default value, there will be software direction control instead of hardware control.
 See below.
-- **bool isConnected()** checks if the fixed address 0x36 is on the I2C bus.
-- **uint8_t getAddress()** returns the device address 0x36. 
+- **bool isConnected()** checks if the address 0x36 is on the I2C bus.
+- **uint8_t getAddress()** returns the fixed device address 0x36. 
 
 
 ### Direction
 
 To define in which way the sensor counts up.
 
-- **void setDirection(uint8_t direction = AS5600_CLOCK_WISE)**
-- **uint8_t getDirection()**
+- **void setDirection(uint8_t direction = AS5600_CLOCK_WISE)** idem.
+- **uint8_t getDirection()** returns AS5600_CLOCK_WISE (0) or
+AS5600_COUNTERCLOCK_WISE (1).
 
 
 ### Configuration registers
 
-Please read datasheet for details.
+Please read the datasheet for details.
 
 - **void setZPosition(uint16_t value)** set start position for limited range.
 - **uint16_t getZPosition()** get current start position.
@@ -145,6 +131,8 @@ Please read datasheet for details.
 - **void setMaxAngle(uint16_t value)** set limited range.
 See datasheet **Angle Programming**
 - **uint16_t getMaxAngle()** get limited range.
+
+
 - **void setConfigure(uint16_t value)**
 - **uint16_t getConfigure()**
 
@@ -168,7 +156,8 @@ Please read datasheet for details.
 ### Read Angle
 
 - **uint16_t rawAngle()** idem. returns 0 .. 4095. 
-Conversion factor to degrees = 360 / 4095 = 0.0879121  
+Conversion factor AS5600_RAW_TO_DEGREES = 360 / 4095 = 0.0879121... 
+or use AS5600_RAW_TO_RADIANS. 
 - **uint16_t readAngle()** read the angle from the sensor. 
 This is the one most used.
 
@@ -178,9 +167,8 @@ This is the one most used.
 - **getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES)** is an experimental function that returns 
 an approximation of the angular speed in rotations per second.
 The function needs to be called at least **four** times per rotation
-to get a reasonably accuracy. 
+or once per second to get a reasonably accuracy. 
 
-(0.1.3 added mode parameter).
 - mode == AS5600_MODE_RADIANS (1): radians /second
 - mode == AS5600_MODE_DEGREES (0): degrees /second (default)
 - mode other => degrees /second
@@ -189,17 +177,23 @@ Negative values indicate reverse rotation.
 What that means depends on the setup of your project.
 
 Note: the first call will return an erroneous value as it has no
-reference angle or time. Also if one stops calling this function 
+reference angle or time. 
+Also if one stops calling this function 
 for some time the first call after such delays will be incorrect.
+
+Note: the frequency of calling this function of the sensor depends on the application. 
+The faster the magnet rotates, the faster it may be called.
+Also if one wants to detect minute movements, calling it more often is the way to go.
 
 
 ### Status registers
 
-- **uint8_t readStatus()** see below.
+- **uint8_t readStatus()** see Status bits below.
 - **uint8_t readAGC()** returns the Automatic Gain Control.
 0..255 in 5V mode, 0..128 in 3V3 mode.
 - **uint16_t readMagnitude()** reads the current internal magnitude.
-Meaning or scale is unclear. 
+(page 9 datasheet)
+Scale is unclear, can be used as relative scale.
 - **bool detectMagnet()** returns true if device sees a magnet.
 
 
@@ -245,9 +239,9 @@ Experimental 0.2.0
 
 Normally one controls the direction of the sensor by connecting the DIR pin to one of the available IO pins of the processor. This IO pin is set in the library as parameter of the **begin(directionPin)** function.
 
-Since version 0.2.0 the directionPin is default set to 255, which defines a software direction control.
+The directionPin is default set to 255, which defines a software direction control.
 To have this working one has to connect the DIR pin of the sensor to GND.
-This puts the sensor in a hardware clock wise mode, so it is up to the library to do additional math so the **readAngle()** and **rawAngle()** behave as if the DIR pin was connected to VCC.
+This puts the sensor in a hardware clock wise mode, so it is up to the library to do the additional math so the **readAngle()** and **rawAngle()** behave as if the DIR pin was connected to the processor IO pin.
 
 The gain is that the user does not need an IO pin for this, which makes connecting the sensor a bit easier.
 
@@ -268,7 +262,7 @@ Alternative could be the use of a AND port for the I2C clock line to prevent
 the sensor from listening to signals on the I2C bus. 
 
 Finally the sensor has an analogue output **OUT**.
-This output could be used to connect multiple sensors to different analog ports of the processor.
+This output could be used to connect multiple sensors to different analogue ports of the processor.
 
 **Warning**: If and how well this analog option works is not verified or tested. (TODO)
 
@@ -311,33 +305,26 @@ priority is relative
 
 - get hardware to test.
 - improve documentation.
-- write examples:
-  - as5600_calibration.ino
-  - different configuration options
-  - software direction control
+- investigate OUT output pin.
+  - PWM, analog_90 and analog_100
 
 
 #### med prio
 
+- investigate **readMagnitude()**
+  - combination of AGC and MD, ML and MH flags?
 - investigate performance
+  - basic performance per function
   - I2C improvements
   - software direction
-  - other?
-- investigate OUT output pin.
-  - PWM, analog_90 and analog_100
-- investigate **magnetStrength()**  
-  - combination of AGC and MD, ML and MH flags?
+- write examples:
+  - as5600_calibration.ino (needs HW and lots of time)
+  - different configuration options
 
 
 #### low prio
 
-- improve unit test
 - add error handling
 - investigate PGO programming pin.
-- add constants for remaining configure functions
-  - hysteresis, 
-  - fast filter
-  - slow filter
-
 
 
