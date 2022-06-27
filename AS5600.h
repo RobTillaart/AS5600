@@ -2,7 +2,7 @@
 //
 //    FILE: AS5600.h
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.4
+// VERSION: 0.2.0
 // PURPOSE: Arduino library for AS5600 magnetic rotation meter
 //    DATE: 2022-05-28
 //     URL: https://github.com/RobTillaart/AS5600
@@ -12,7 +12,7 @@
 #include "Wire.h"
 
 
-#define AS5600_LIB_VERSION              (F("0.1.4"))
+#define AS5600_LIB_VERSION              (F("0.2.0"))
 
 //  setDirection
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
@@ -56,9 +56,11 @@ public:
   AS5600(TwoWire *wire = &Wire);
 
 #if defined (ESP8266) || defined(ESP32)
-  bool     begin(int sda, int scl, uint8_t directionPin);
+           //  255 is software controlled direction pin
+  bool     begin(int sda, int scl, uint8_t directionPin = 255);
 #endif
-  bool     begin(uint8_t directionPin);
+           //  255 is software controlled direction pin
+  bool     begin(uint8_t directionPin = 255);
   bool     isConnected();
 
   uint8_t  getAddress() { return _address; };  //  0x36
@@ -149,8 +151,9 @@ private:
   uint8_t  writeReg2(uint8_t reg, uint16_t value);
 
   const uint8_t _address = 0x36;
-  uint8_t  _directionPin;
-  uint8_t  _error = 0;
+  uint8_t  _directionPin = 255;
+  uint8_t  _direction    = AS5600_CLOCK_WISE;
+  uint8_t  _error        = 0;
 
   TwoWire*  _wire;
 

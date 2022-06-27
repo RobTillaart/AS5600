@@ -116,10 +116,14 @@ const uint8_t AS5600_WATCHDOG_ON        = 1;
 ### Constructor + I2C
 
 - **AS5600(TwoWire \*wire = &Wire)** Constructor with optional Wire interface as parameter.
-- **bool begin(uint8_t directionPin = AS5600_CLOCK_WISE)** set the value for the directionPin.
-- **bool begin(int sda, int scl, uint8_t directionPin = AS5600_CLOCK_WISE)** idem, for the ESP32 where one can choose the I2C pins.
+- **bool begin(uint8_t directionPin = 255)** set the value for the directionPin. 
+If the pin is set to 255, the default value, there will be software direction control instead of hardware control.
+See below.
+- **bool begin(int sda, int scl, uint8_t directionPin = 255)** idem, for the ESP32 where one can choose the I2C pins.
+If the pin is set to 255, the default value, there will be software direction control instead of hardware control.
+See below.
 - **bool isConnected()** checks if the fixed address 0x36 is on the I2C bus.
-- **uint8_t getAddress()** returns the device address. 
+- **uint8_t getAddress()** returns the device address 0x36. 
 
 
 ### Direction
@@ -235,6 +239,25 @@ You can only burn a new Angle maximum **THREE** times to the AS5600.
 You can write this only **ONE** time to the AS5600.
 
 
+## Software Direction Control
+
+Experimental 0.2.0
+
+Normally one controls the direction of the sensor by connecting the DIR pin to one of the available IO pins of the processor. This IO pin is set in the library as parameter of the **begin(directionPin)** function.
+
+Since version 0.2.0 the directionPin is default set to 255, which defines a software direction control.
+To have this working one has to connect the DIR pin of the sensor to GND.
+This puts the sensor in a hardware clock wise mode, so it is up to the library to do additional math so the **readAngle()** and **rawAngle()** behave as if the DIR pin was connected to VCC.
+
+The gain is that the user does not need an IO pin for this, which makes connecting the sensor a bit easier.
+
+In terms of the interface, the user call **setDirection()** as before to change the direction.
+
+TODO: measure performance impact.
+
+TODO: investigate impact on functionality of other registers.
+
+
 ## Multiplexing
 
 The I2C address of the **AS5600** is always 0x36.
@@ -281,27 +304,40 @@ See examples.
 ## Future
 
 Some ideas are kept here so they won't get lost.
+priority is relative
 
 
-### high prio
+#### high prio
 
 - get hardware to test.
-- improve documentation
-- investigate PGO programming pin.
+- improve documentation.
+- write examples:
+  - as5600_calibration.ino
+  - different configuration options
+  - software direction control
+
+
+#### med prio
+
+- investigate performance
+  - I2C improvements
+  - software direction
+  - other?
 - investigate OUT output pin.
   - PWM, analog_90 and analog_100
-- write examples
-  - as5600_calibration.ino ?
-- add constants for remaining configure functions
-  - hysteresis, fast / slow filter
 - investigate **magnetStrength()**  
   - combination of AGC and MD, ML and MH flags?
 
 
-### low prio
+#### low prio
 
-- unit test
-- error handling?
-- test I2C speeds.
+- improve unit test
+- add error handling
+- investigate PGO programming pin.
+- add constants for remaining configure functions
+  - hysteresis, 
+  - fast filter
+  - slow filter
+
 
 
