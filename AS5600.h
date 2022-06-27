@@ -3,7 +3,6 @@
 //    FILE: AS5600.h
 //  AUTHOR: Rob Tillaart
 // VERSION: 0.2.0
-
 // PURPOSE: Arduino library for AS5600 magnetic rotation meter
 //    DATE: 2022-05-28
 //     URL: https://github.com/RobTillaart/AS5600
@@ -87,7 +86,6 @@ public:
 #endif
            //  255 is software controlled direction pin
   bool     begin(uint8_t directionPin = 255);
-
   bool     isConnected();
 
   uint8_t  getAddress() { return _address; };  //  0x36
@@ -128,7 +126,6 @@ public:
   //  1 = analog 10-90%
   //  2 = PWM
   void     setOutputMode(uint8_t outputMode);
-
   uint8_t  getOutputMode();
 
   //  0 = 115    1 = 230    2 = 460    3 = 920 (Hz)

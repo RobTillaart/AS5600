@@ -50,7 +50,6 @@ As the sensor can be programmed only a few times one should
 use this functionality with extreme care.
 See datasheet for a detailed list of steps to be done.
 
-
 See also **Make configuration persistent** below.
 
 
@@ -263,7 +262,6 @@ Alternative could be the use of a AND port for the I2C clock line to prevent
 the sensor from listening to signals on the I2C bus. 
 
 Finally the sensor has an analogue output **OUT**.
-
 This output could be used to connect multiple sensors to different analogue ports of the processor.
 
 **Warning**: If and how well this analog option works is not verified or tested. (TODO)
