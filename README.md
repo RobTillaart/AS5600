@@ -17,9 +17,15 @@ Arduino library for AS5600 magnetic rotation meter.
 
 **AS5600** is a library for an AS5600 based magnetic rotation meter.
 
-**Warning: experimental - not tested yet**
+**Warning: experimental - not tested**
 
-TODO: buy hardware to test the library.
+The sensor can measure a full rotation in 4096 steps.
+The precision is therefore limited to 0.1°.
+Noise levels unknown, but one might expect it to be effected by electric
+and or magnetic signals in the environment.
+Also unknown is the influence of metals near the sensor or an unstable or fluctuating power supply.
+
+TODO: buy hardware to test the library and get hands on experience with the sensor.
 
 
 ### I2C Address
@@ -30,13 +36,20 @@ To use more than one **AS5600** on one I2C bus, see Multiplexing below.
 
 ### OUT pin
 
-The sensor has an analogue output **OUT** that can be used for analog or PWM 
-output. This interface is not further investigated.
+Not tested.
+
+The sensor has an output pin named **OUT**.
+This pin can be used for an analogue or PWM output signal. 
+Examples are added to show how to use this pin with **setOutputMode()**.
 
 
 ### PGO pin
 
+Not tested.
+
 PGO stand for Programming Option, it is used to calibrate / program the sensor.
+As the sensor can be programmed only 3 times one should
+use this functionality with extreme care.
 See datasheet for a detailed list of steps to be done.
 
 TODO elaborate?
@@ -44,8 +57,16 @@ TODO elaborate?
 
 ## Hardware connection
 
-include schematic  sensor  -- processor
+The sensor should connect the I2C lines SDA and SCL and the
+VCC and GND to communicate with the processor.
+The DIR (direction) pin of the sensor should be connected to:
+- GND = fixed clockwise
+- VCC = fixed counter clock wise
+- a free IO pin of the processor = library control.
 
+In the latter setup the library can control the direction of counting by initializing this pin in **begin(pin)**, followed by **setDirection(direction)**. For the direction the library defines two constants named:
+- **AS5600_CLOCK_WISE (0)**
+- **AS5600_COUNTERCLOCK_WISE (1)**
 
 
 ## Interface
@@ -59,11 +80,11 @@ The I2C address of the **AS5600** is always 0x36.
 
 ```cpp
 //  setDirection
-const uint8_t AS5600_CLOCK_WISE         = 0;  // LOW
-const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;   // HIGH
+const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
+const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
 
-const float   AS5600_RAW_TO_DEGREES     = 0.0879120879120879121;
-const float   AS5600_RAW_TO_RADIANS     = 0.00153435538636864138630654133494;
+const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4095.0;   //  0.0879120879120879121;
+const float   AS5600_RAW_TO_RADIANS     = 2 * PI / 4095.0;  //  0.00153435538636864138630654133494;
 
 //  getAngularSpeed
 const uint8_t AS5600_MODE_DEGREES       = 0;
@@ -73,6 +94,12 @@ const uint8_t AS5600_MODE_RADIANS       = 1;
 const uint8_t AS5600_OUTMODE_ANALOG_100 = 0;
 const uint8_t AS5600_OUTMODE_ANALOG_90  = 1;
 const uint8_t AS5600_OUTMODE_PWM        = 2;
+
+//  setPowerMode
+const uint8_t AS5600_POWERMODE_NOMINAL  = 0;
+const uint8_t AS5600_POWERMODE_LOW1     = 1;
+const uint8_t AS5600_POWERMODE_LOW2     = 2;
+const uint8_t AS5600_POWERMODE_LOW3     = 3;
 
 //  setPWMFrequency
 const uint8_t AS5600_PWM_115            = 0;
@@ -217,8 +244,10 @@ e.g. https://github.com/RobTillaart/TCA9548.
 Alternative could be the use of a AND port for the I2C clock line to prevent 
 the sensor from listening to signals on the I2C bus. 
 
-Finally the sensor has an analog output **OUT** that could be used which would
-allow multiple sensors connected to e.g. one Arduino UNO. This is not further investigated.
+Finally the sensor has an analogue output **OUT**.
+This output could be used to connect multiple sensors to different analog ports of the processor.
+
+**Warning**: If and how well this analog option works is not verified or tested. (TODO)
 
 
 ## Operational
@@ -259,12 +288,13 @@ Some ideas are kept here so they won't get lost.
 - get hardware to test.
 - improve documentation
 - investigate PGO programming pin.
+- investigate OUT output pin.
+  - PWM, analog_90 and analog_100
 - write examples
   - as5600_calibration.ino ?
-- add functions
-  - **setOutputMode()** + constants.
-  - **setPowerMode()** + constants
-- **magnetStrength()**  
+- add constants for remaining configure functions
+  - hysteresis, fast / slow filter
+- investigate **magnetStrength()**  
   - combination of AGC and MD, ML and MH flags?
 
 

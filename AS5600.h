@@ -18,8 +18,10 @@
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
 const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
 
-const float   AS5600_RAW_TO_DEGREES     = 0.0879120879120879121;
-const float   AS5600_RAW_TO_RADIANS     = 0.00153435538636864138630654133494;
+//  0.0879120879120879121;
+const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4095.0;
+//  0.00153435538636864138630654133494;
+const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4095.0;
 
 //  getAngularSpeed
 const uint8_t AS5600_MODE_DEGREES       = 0;
@@ -29,6 +31,12 @@ const uint8_t AS5600_MODE_RADIANS       = 1;
 const uint8_t AS5600_OUTMODE_ANALOG_100 = 0;
 const uint8_t AS5600_OUTMODE_ANALOG_90  = 1;
 const uint8_t AS5600_OUTMODE_PWM        = 2;
+
+//  setPowerMode
+const uint8_t AS5600_POWERMODE_NOMINAL  = 0;
+const uint8_t AS5600_POWERMODE_LOW1     = 1;
+const uint8_t AS5600_POWERMODE_LOW2     = 2;
+const uint8_t AS5600_POWERMODE_LOW3     = 3;
 
 //  setPWMFrequency
 const uint8_t AS5600_PWM_115            = 0;
@@ -48,9 +56,9 @@ public:
   AS5600(TwoWire *wire = &Wire);
 
 #if defined (ESP8266) || defined(ESP32)
-  bool     begin(int sda, int scl, int directionPin);
+  bool     begin(int sda, int scl, uint8_t directionPin);
 #endif
-  bool     begin(int directionPin);
+  bool     begin(uint8_t directionPin);
   bool     isConnected();
 
   uint8_t  getAddress() { return _address; };  //  0x36

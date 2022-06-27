@@ -71,7 +71,7 @@ AS5600::AS5600(TwoWire *wire)
 
 
 #if defined (ESP8266) || defined(ESP32)
-bool AS5600::begin(int dataPin, int clockPin, int directionPin)
+bool AS5600::begin(int dataPin, int clockPin, uint8_t directionPin)
 {
   _directionPin = directionPin;
   pinMode(_directionPin, OUTPUT);
@@ -90,7 +90,7 @@ bool AS5600::begin(int dataPin, int clockPin, int directionPin)
 #endif
 
 
-bool AS5600::begin(int directionPin)
+bool AS5600::begin(uint8_t directionPin)
 {
   _directionPin = directionPin;
   pinMode(_directionPin, OUTPUT);
