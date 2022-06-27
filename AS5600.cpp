@@ -21,6 +21,8 @@
 //                      Fix default parameter of the begin function.
 //
 //  0.2.0   2022-06-28  add software based direction control.
+//                      add examples
+//                      define constants for configuration functions.
 //
 
 
