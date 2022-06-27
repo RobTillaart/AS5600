@@ -48,11 +48,11 @@ Examples are added to show how to use this pin with **setOutputMode()**.
 Not tested.
 
 PGO stand for Programming Option, it is used to calibrate / program the sensor.
-As the sensor can be programmed only 3 times one should
+As the sensor can be programmed only a few times one should
 use this functionality with extreme care.
 See datasheet for a detailed list of steps to be done.
 
-TODO elaborate?
+See also **Make configuration persistent** below.
 
 
 ## Hardware connection
