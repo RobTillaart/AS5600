@@ -160,18 +160,26 @@ Conversion factor AS5600_RAW_TO_DEGREES = 360 / 4096 = 0.087890625
 or use AS5600_RAW_TO_RADIANS if needed. 
 - **uint16_t readAngle()** read the angle from the sensor. 
 This is the one most used.
-- **void setOffset(float degrees)** sets offset in degrees. 
-typical -359.99 - 359.99. Larger values will be mapped back to this interval.
-Be aware that larger values will affect / decrease the accuracy of the measurements. 
+- **void setOffset(float degrees)** sets an offset in degrees,
+e.g. to calibrate the sensor after mounting.
+Typical values are -359.99 - 359.99 probably smaller. 
+Larger values will be mapped back to this interval.
+Be aware that larger values will affect / decrease the precision of the measurements as floats have only 7 significant digits.
 Verify this for your application.
-- **floatgetOffset()** returns offset in degrees.
+- **float getOffset()** returns offset in degrees.
+
+In #14 there is a discussion about **setOffset()**.
+A possible implementation is to ignore all values outside the
+-359.99 - 359.99 range.
+This would help to keep the precision high.
+
 
 ### Angular Speed
 
-- **getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES)** is an experimental function that returns 
+- **float getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES)** is an experimental function that returns 
 an approximation of the angular speed in rotations per second.
 The function needs to be called at least **four** times per rotation
-or once per second to get a reasonably accuracy. 
+or once per second to get a reasonably precision. 
 
 - mode == AS5600_MODE_RADIANS (1): radians /second
 - mode == AS5600_MODE_DEGREES (0): degrees /second (default)
@@ -312,7 +320,6 @@ priority is relative
 - investigate OUT output pin.
   - PWM, analog_90 and analog_100
 
-
 #### med prio
 
 - investigate **readMagnitude()**
@@ -324,11 +331,13 @@ priority is relative
 - write examples:
   - as5600_calibration.ino (needs HW and lots of time)
   - different configuration options
-
+- create **changeLog.md**
 
 #### low prio
 
 - add error handling
 - investigate PGO programming pin.
+- add mode parameter to offset functions.
+  - see getAngularSpeed()
 
 
