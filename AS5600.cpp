@@ -24,7 +24,7 @@
 //                      add examples
 //                      define constants for configuration functions.
 //                      fix conversion constants (4096 based)
-
+//                      add get- setOffset(degrees)   functions. (no radians yet)
 
 // TODO
 //  Power-up time  1 minute
@@ -329,6 +329,26 @@ uint16_t AS5600::readAngle()
 }
 
 
+void AS5600::setOffset(float degrees)
+{
+  bool neg = false;
+  if (degrees < 0)
+  {
+    neg = true;
+    degrees = -degrees;
+  }
+  uint16_t offset = round(degrees * (4096 / 360.0)) & 4095;
+  if (neg) offset = 4096 - offset;
+  _offset = offset;
+}
+
+
+float AS5600::getOffset()
+{
+  return _offset * AS5600_RAW_TO_DEGREES;
+}
+
+
 /////////////////////////////////////////////////////////
 //
 //  STATUS REGISTERS
@@ -383,7 +403,7 @@ float AS5600::getAngularSpeed(uint8_t mode)
   uint32_t now     = micros();
   int      angle   = readAngle();
   uint32_t deltaT  = now - _lastMeasurement;
-  int      deltaA  = angle - _lastAngle;
+  int      deltaA  = angle - _lastAngle;   //  fails mod 360
   float    speed   = (deltaA * 1e6) / deltaT;
   //  remember last time & angle
   _lastMeasurement = now;

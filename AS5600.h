@@ -151,6 +151,9 @@ public:
   uint16_t rawAngle();
   uint16_t readAngle();
 
+  void     setOffset(float degrees);
+  float    getOffset();
+
 
   //  READ STATUS REGISTERS
   uint8_t  readStatus();
@@ -166,7 +169,8 @@ public:
   //  void burnAngle();
   //  void burnSetting();
 
-  //  experimental 0.1.2 - to be tested.
+
+  //  Experimental 0.1.2 - to be tested.
   //  approximation of the angular speed in rotations per second.
   //  mode == 1: radians /second
   //  mode == 0: degrees /second  (default)
