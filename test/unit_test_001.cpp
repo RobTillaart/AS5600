@@ -149,6 +149,29 @@ unittest(test_software_direction)
 }
 
 
+unittest(test_offset)
+{
+  AS5600 as5600;
+
+  as5600.begin();
+  
+  for (int of = 0; of < 360; of += 40)
+  {
+    as5600.setOffset(of);
+    assertEqualFloat(of, as5600.getOffset(), 0.05);
+  }
+
+  as5600.setOffset(-40.25);
+  assertEqualFloat(319.75, as5600.getOffset(), 0.05);
+
+  as5600.setOffset(-400.25);
+  assertEqualFloat(319.75, as5600.getOffset(), 0.05);
+
+  as5600.setOffset(753.15);
+  assertEqualFloat(33.15, as5600.getOffset(), 0.05);
+}
+
+
 
 // FOR REMAINING ONE NEED A STUB
 
