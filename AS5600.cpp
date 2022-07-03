@@ -408,8 +408,15 @@ float AS5600::getAngularSpeed(uint8_t mode)
   uint32_t now     = micros();
   int      angle   = readAngle();
   uint32_t deltaT  = now - _lastMeasurement;
-  int      deltaA  = angle - _lastAngle;   //  fails mod 360
+  int      deltaA  = angle - _lastAngle;
+
+  //  assumption is that there is no more than 180° rotation
+  //  between two consecutive measurements.
+  //  => at least two measurements per rotation (preferred 4).
+  if (deltaA >  2048) deltaA -= 4096;
+  if (deltaA < -2048) deltaA += 4096;
   float    speed   = (deltaA * 1e6) / deltaT;
+
   //  remember last time & angle
   _lastMeasurement = now;
   _lastAngle       = angle;
