@@ -310,6 +310,8 @@ uint8_t AS5600::getWatchDog()
 uint16_t AS5600::rawAngle()
 {
   uint16_t value = readReg2(AS5600_RAW_ANGLE) & 0x0FFF;
+  if (_offset > 0) value = (value + _offset) & 0x0FFF;
+
   if ((_directionPin == 255) && (_direction == AS5600_COUNTERCLOCK_WISE))
   {
     value = (4096 - value) & 4095;
@@ -321,6 +323,8 @@ uint16_t AS5600::rawAngle()
 uint16_t AS5600::readAngle()
 {
   uint16_t value = readReg2(AS5600_ANGLE) & 0x0FFF;
+  if (_offset > 0) value = (value + _offset) & 0x0FFF;
+  
   if ((_directionPin == 255) && (_direction == AS5600_COUNTERCLOCK_WISE))
   {
     value = (4096 - value) & 4095;
@@ -339,7 +343,7 @@ void AS5600::setOffset(float degrees)
   }
   uint16_t offset = round(degrees * (4096 / 360.0)) & 4095;
   if (neg) offset = 4096 - offset;
-  _offset = offset;
+  _offset = offset;  
 }
 
 

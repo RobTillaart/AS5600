@@ -192,6 +192,8 @@ private:
 
   uint32_t _lastMeasurement = 0;
   uint16_t _lastAngle       = 0;
+
+  uint16_t _offset          = 0;
 };
 
 
