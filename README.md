@@ -58,15 +58,15 @@ See also **Make configuration persistent** below.
 The sensor should connect the I2C lines SDA and SCL and the
 VCC and GND to communicate with the processor.
 The DIR (direction) pin of the sensor should be connected to:
-- GND = fixed clockwise(\*)
-- VCC = fixed counter clock wise
+- **GND** = fixed clockwise(\*)
+- **VCC** = fixed counter clock wise
 - a free IO pin of the processor = library control.
 
 In the latter setup the library can control the direction of counting by initializing this pin in **begin(directionPin)**, followed by **setDirection(direction)**. For the direction the library defines two constants named:
 - **AS5600_CLOCK_WISE (0)**
 - **AS5600_COUNTERCLOCK_WISE (1)**
 
-(\*) if **begin()** is called without **directionPin** or with this parameter set to 255, software direction control is enabled.
+(\*) if **begin()** is called without **directionPin** or with this parameter set to **255**, software direction control is enabled.
 See below for more information.
 
 
@@ -84,10 +84,10 @@ Most important are:
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
 const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
 
-//  0.0879120879120879121;
-const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4095.0;
-//  0.00153435538636864138630654133494;
-const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4095.0;
+//  0.087890625;
+const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4096;
+//  0.00153398078788564122971808758949;
+const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4096;
 
 //  getAngularSpeed
 const uint8_t AS5600_MODE_DEGREES       = 0;
@@ -155,12 +155,16 @@ Please read datasheet for details.
 
 ### Read Angle
 
-- **uint16_t rawAngle()** idem. returns 0 .. 4095. 
-Conversion factor AS5600_RAW_TO_DEGREES = 360 / 4095 = 0.0879121... 
-or use AS5600_RAW_TO_RADIANS. 
+- **uint16_t rawAngle()** idem. returns 0 .. 4095. (12 bits) 
+Conversion factor AS5600_RAW_TO_DEGREES = 360 / 4096 = 0.087890625 
+or use AS5600_RAW_TO_RADIANS if needed. 
 - **uint16_t readAngle()** read the angle from the sensor. 
 This is the one most used.
-
+- **void setOffset(float degrees)** sets offset in degrees. 
+typical -359.99 - 359.99. Larger values will be mapped back to this interval.
+Be aware that larger values will affect / decrease the accuracy of the measurements. 
+Verify this for your application.
+- **floatgetOffset()** returns offset in degrees.
 
 ### Angular Speed
 

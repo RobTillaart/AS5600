@@ -341,7 +341,8 @@ void AS5600::setOffset(float degrees)
     neg = true;
     degrees = -degrees;
   }
-  uint16_t offset = round(degrees * (4096 / 360.0)) & 4095;
+  uint16_t offset = round(degrees * (4096 / 360.0));
+  offset &= 4095;
   if (neg) offset = 4096 - offset;
   _offset = offset;  
 }
