@@ -151,6 +151,7 @@ public:
   uint16_t rawAngle();
   uint16_t readAngle();
 
+  //  software based offset.
   void     setOffset(float degrees);
   float    getOffset();
 
