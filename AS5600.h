@@ -2,7 +2,7 @@
 //
 //    FILE: AS5600.h
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.1
+// VERSION: 0.3.0
 // PURPOSE: Arduino library for AS5600 magnetic rotation meter
 //    DATE: 2022-05-28
 //     URL: https://github.com/RobTillaart/AS5600
@@ -103,20 +103,24 @@ public:
   uint8_t  getZMCO();
 
   //  0 .. 4095
-  void     setZPosition(uint16_t value);
+  //  returns false if parameter out of range
+  bool     setZPosition(uint16_t value);
   uint16_t getZPosition();
 
   //  0 .. 4095
-  void     setMPosition(uint16_t value);
+  //  returns false if parameter out of range
+  bool     setMPosition(uint16_t value);
   uint16_t getMPosition();
 
   //  0 .. 4095
-  void     setMaxAngle(uint16_t value);
+  //  returns false if parameter out of range
+  bool     setMaxAngle(uint16_t value);
   uint16_t getMaxAngle();
 
   //  access the whole configuration register
   //  check datasheet for bit fields
-  void     setConfigure(uint16_t value);
+  //  returns false if parameter out of range
+  bool     setConfigure(uint16_t value);
   uint16_t getConfigure();
 
   //  access details of the configuration register
@@ -167,7 +171,10 @@ public:
   uint16_t readAngle();
 
   //  software based offset.
-  void     setOffset(float degrees);
+  //  degrees = -359.99 .. 359.99 (preferred)
+  //  returns false if abs(parameter) > 36000
+  //          => expect loss of precision
+  bool     setOffset(float degrees);
   float    getOffset();
 
 

@@ -154,7 +154,7 @@ unittest(test_offset)
   AS5600 as5600;
 
   as5600.begin();
-  
+
   for (int of = 0; of < 360; of += 40)
   {
     as5600.setOffset(of);
@@ -169,6 +169,30 @@ unittest(test_offset)
 
   as5600.setOffset(753.15);
   assertEqualFloat(33.15, as5600.getOffset(), 0.05);
+
+  assetFalse(as5600.setOffset(359.9991));
+  assetFalse(as5600.setOffset(-359.9991));
+}
+
+
+unittest(test_failing_set_commands)
+{
+  AS5600 as5600;
+
+  as5600.begin();
+
+  assertFalse(as5600.setZPosition(4096));
+  assertFalse(as5600.setMPosition(4096));
+  assertFalse(as5600.setMaxAngle(4096));
+
+  assertFalse(as5600.setConfigure(0x4000));
+  assertFalse(as5600.setPowerMode(4));
+  assertFalse(as5600.setHysteresis(4));
+  assertFalse(as5600.setOutputMode(3));
+  assertFalse(as5600.setPWMFrequency(4));
+  assertFalse(as5600.setSlowFilter(4));
+  assertFalse(as5600.setFastFilter(8));
+  assertFalse(as5600.setWatchDog(2));
 }
 
 

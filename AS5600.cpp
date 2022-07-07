@@ -1,7 +1,7 @@
 //
 //    FILE: AS56000.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.1
+// VERSION: 0.3.0
 // PURPOSE: Arduino library for AS5600 magnetic rotation meter
 //    DATE: 2022-05-28
 //     URL: https://github.com/RobTillaart/AS5600
@@ -25,7 +25,8 @@
 //                      define constants for configuration functions.
 //                      fix conversion constants (4096 based)
 //                      add get- setOffset(degrees)   functions. (no radians yet)
-//  0.2.1               add bool return to set() functions
+//  0.2.1   notreleased add bool return to set() functions.
+//  0.3.0   2022-07-07  fix #18 invalid Mask setConfigure.
 
 
 // TODO
@@ -153,9 +154,11 @@ uint8_t AS5600::getZMCO()
 }
 
 
-void AS5600::setZPosition(uint16_t value)
+bool AS5600::setZPosition(uint16_t value)
 {
-  writeReg2(AS5600_ZPOS, value & 0x0FFF);
+  if (value > 0x0FFF) return false;
+  writeReg2(AS5600_ZPOS, value);
+  return true;
 }
 
 
@@ -166,9 +169,11 @@ uint16_t AS5600::getZPosition()
 }
 
 
-void AS5600::setMPosition(uint16_t value)
+bool AS5600::setMPosition(uint16_t value)
 {
-  writeReg2(AS5600_MPOS, value & 0x0FFF);
+  if (value > 0x0FFF) return false;
+  writeReg2(AS5600_MPOS, value);
+  return true;
 }
 
 
@@ -179,9 +184,11 @@ uint16_t AS5600::getMPosition()
 }
 
 
-void AS5600::setMaxAngle(uint16_t value)
+bool AS5600::setMaxAngle(uint16_t value)
 {
-  writeReg2(AS5600_MANG, value & 0x0FFF);
+  if (value > 0x0FFF) return false;
+  writeReg2(AS5600_MANG, value);
+  return true;
 }
 
 
@@ -192,15 +199,17 @@ uint16_t AS5600::getMaxAngle()
 }
 
 
-void AS5600::setConfigure(uint16_t value)
+bool AS5600::setConfigure(uint16_t value)
 {
-  writeReg2(AS5600_CONF, value & 0x2FFF);
+  if (value > 0x3FFF) return false;
+  writeReg2(AS5600_CONF, value);
+  return true;
 }
 
 
 uint16_t AS5600::getConfigure()
 {
-    uint16_t value = readReg2(AS5600_CONF) & 0x2FFF;
+  uint16_t value = readReg2(AS5600_CONF) & 0x3FFF;
   return value;
 }
 
@@ -333,7 +342,7 @@ uint16_t AS5600::readAngle()
 {
   uint16_t value = readReg2(AS5600_ANGLE) & 0x0FFF;
   if (_offset > 0) value = (value + _offset) & 0x0FFF;
-  
+
   if ((_directionPin == 255) && (_direction == AS5600_COUNTERCLOCK_WISE))
   {
     value = (4096 - value) & 4095;
@@ -342,18 +351,18 @@ uint16_t AS5600::readAngle()
 }
 
 
-void AS5600::setOffset(float degrees)
+bool AS5600::setOffset(float degrees)
 {
-  bool neg = false;
-  if (degrees < 0)
-  {
-    neg = true;
-    degrees = -degrees;
-  }
+  // expect loss of precision.
+  if (abs(degrees) > 36000) return false;
+  bool neg = (degrees < 0);
+  if (neg) degrees = -degrees;
+
   uint16_t offset = round(degrees * (4096 / 360.0));
   offset &= 4095;
   if (neg) offset = 4096 - offset;
-  _offset = offset;  
+  _offset = offset;
+  return true;
 }
 
 

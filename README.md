@@ -142,16 +142,22 @@ AS5600_COUNTERCLOCK_WISE (1).
 
 Please read the datasheet for details.
 
-- **void setZPosition(uint16_t value)** set start position for limited range.
+- **bool setZPosition(uint16_t value)** set start position for limited range. Value = 0..4095.
+Returns false if parameter is out of range.
 - **uint16_t getZPosition()** get current start position.
-- **void setMPosition(uint16_t value)** set stop position for limited range.
+- **bool setMPosition(uint16_t value)** set stop position for limited range. Value = 0..4095.
+Returns false if parameter is out of range.
 - **uint16_t getMPosition()** get current stop position.
-- **void setMaxAngle(uint16_t value)** set limited range.
+- **bool setMaxAngle(uint16_t value)** set limited range.
+Value = 0..4095.
+Returns false if parameter is out of range.
 See datasheet **Angle Programming**
 - **uint16_t getMaxAngle()** get limited range.
 
 
-- **void setConfigure(uint16_t value)**
+- **bool setConfigure(uint16_t value)**
+Value = 0..0x4000
+Returns false if parameter is out of range.
 - **uint16_t getConfigure()**
 
 
@@ -181,10 +187,9 @@ See the .h file for the other get/set functions.
 
 #### Hysteresis
 
-- **bool setHysteresis(uint8_t hysteresis)**
-
-Suppresses "noise" on the output when the magnet is not moving.
+- **bool setHysteresis(uint8_t hysteresis)** Suppresses "noise" on the output when the magnet is not moving.
 In a way one is trading precision for stability.
+returns false if parameter is out of range.
 
 
 ### Read Angle
@@ -448,6 +453,7 @@ priority is relative
 
 #### med prio
 
+- limit the **setOffset()** to -359.99 .. 359.99
 - investigate **readMagnitude()**
   - combination of AGC and MD, ML and MH flags?
 - investigate performance
