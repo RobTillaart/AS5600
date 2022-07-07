@@ -26,6 +26,7 @@
 //                      fix conversion constants (4096 based)
 //                      add get- setOffset(degrees)   functions. (no radians yet)
 //  0.2.1   notreleased add bool return to set() functions.
+//                      update Readme (analog / PWM out)
 //  0.3.0   2022-07-07  fix #18 invalid mask setConfigure().
 
 
