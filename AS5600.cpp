@@ -26,11 +26,11 @@
 //                      fix conversion constants (4096 based)
 //                      add get- setOffset(degrees)   functions. (no radians yet)
 //  0.2.1   notreleased add bool return to set() functions.
-//  0.3.0   2022-07-07  fix #18 invalid Mask setConfigure.
+//  0.3.0   2022-07-07  fix #18 invalid mask setConfigure().
 
 
 // TODO
-//  Power-up time  1 minute
+//  Power-up time  1 minute (need HW)
 //  check  Timing Characteristics
 
 

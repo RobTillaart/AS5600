@@ -161,17 +161,17 @@ unittest(test_offset)
     assertEqualFloat(of, as5600.getOffset(), 0.05);
   }
 
-  as5600.setOffset(-40.25);
+  assertTrue(as5600.setOffset(-40.25));
   assertEqualFloat(319.75, as5600.getOffset(), 0.05);
 
-  as5600.setOffset(-400.25);
+  assertTrue(as5600.setOffset(-400.25));
   assertEqualFloat(319.75, as5600.getOffset(), 0.05);
 
-  as5600.setOffset(753.15);
+  assertTrue(as5600.setOffset(753.15));
   assertEqualFloat(33.15, as5600.getOffset(), 0.05);
 
-  assetFalse(as5600.setOffset(359.9991));
-  assetFalse(as5600.setOffset(-359.9991));
+  assetFalse(as5600.setOffset(36000.1));
+  assetFalse(as5600.setOffset(-36000.1));
 }
 
 
