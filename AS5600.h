@@ -12,7 +12,7 @@
 #include "Wire.h"
 
 
-#define AS5600_LIB_VERSION              (F("0.2.1"))
+#define AS5600_LIB_VERSION              (F("0.3.0"))
 
 //  setDirection
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
