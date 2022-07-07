@@ -170,8 +170,8 @@ unittest(test_offset)
   assertTrue(as5600.setOffset(753.15));
   assertEqualFloat(33.15, as5600.getOffset(), 0.05);
 
-  assetFalse(as5600.setOffset(36000.1));
-  assetFalse(as5600.setOffset(-36000.1));
+  assertFalse(as5600.setOffset(36000.1));
+  assertFalse(as5600.setOffset(-36000.1));
 }
 
 
