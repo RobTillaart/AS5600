@@ -1,7 +1,7 @@
 //
 //    FILE: AS56000.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.3.0
+// VERSION: 0.3.1
 // PURPOSE: Arduino library for AS5600 magnetic rotation meter
 //    DATE: 2022-05-28
 //     URL: https://github.com/RobTillaart/AS5600
@@ -27,7 +27,9 @@
 //                      add get- setOffset(degrees)   functions. (no radians yet)
 //  0.2.1   notreleased add bool return to set() functions.
 //                      update Readme (analog / PWM out)
+//
 //  0.3.0   2022-07-07  fix #18 invalid mask setConfigure().
+//  0.3.1   2022-08-11  add support for AS5600L (I2C address)
 
 
 // TODO
@@ -60,6 +62,10 @@ const uint8_t AS5600_CONF_WATCH_DOG     = 0x20;
 //  OUTPUT REGISTERS
 const uint8_t AS5600_RAW_ANGLE = 0x0C;  // + 0x0D
 const uint8_t AS5600_ANGLE     = 0x0E;  // + 0x0F
+
+// I2C_ADDRESS REGISTERS (AS5600L)
+const uint8_t AS5600_I2CADDR   = 0x20;
+const uint8_t AS5600_I2CUPDT   = 0x21;
 
 //  STATUS REGISTERS
 const uint8_t AS5600_STATUS    = 0x0B;
@@ -497,6 +503,42 @@ uint8_t AS5600::writeReg2(uint8_t reg, uint16_t value)
   _wire->write(value & 0xFF);
   _error = _wire->endTransmission();
   return _error;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//  AS5600L
+//
+AS5600L::AS5600L(TwoWire *wire) : AS5600(wire)
+{
+}
+
+
+bool AS5600L::setAddress(uint8_t address)
+{
+  //  skip reserved addresses 
+  if ((address < 8) || (address > 119)) return false;
+
+  _address = address;
+  //  note address need to be shifted 1 bit.
+  writeReg(AS5600_I2CADDR, address << 1);
+  return true;
+}
+
+
+bool AS5600L::setI2CUPDT(uint8_t value)
+{
+  //  skip reserved addresses 
+  if (value > 127) return false;
+  writeReg(AS5600_I2CUPDT, value << 1);
+  return true;
+}
+
+
+uint8_t AS5600L::getI2CUPDT()
+{
+  return (readReg(AS5600_I2CUPDT) >> 1);
 }
 
 

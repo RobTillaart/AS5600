@@ -2,7 +2,7 @@
 //
 //    FILE: AS5600.h
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.3.0
+// VERSION: 0.3.1
 // PURPOSE: Arduino library for AS5600 magnetic rotation meter
 //    DATE: 2022-05-28
 //     URL: https://github.com/RobTillaart/AS5600
@@ -12,7 +12,7 @@
 #include "Wire.h"
 
 
-#define AS5600_LIB_VERSION              (F("0.3.0"))
+#define AS5600_LIB_VERSION              (F("0.3.1"))
 
 //  setDirection
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
@@ -200,13 +200,13 @@ public:
   float    getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES);
 
 
-private:
+protected:
   uint8_t  readReg(uint8_t reg);
   uint16_t readReg2(uint8_t reg);
   uint8_t  writeReg(uint8_t reg, uint8_t value);
   uint8_t  writeReg2(uint8_t reg, uint16_t value);
 
-  const uint8_t _address = 0x36;
+  uint8_t  _address      = 0x36;
   uint8_t  _directionPin = 255;
   uint8_t  _direction    = AS5600_CLOCK_WISE;
   uint8_t  _error        = 0;
@@ -219,6 +219,22 @@ private:
 
   //  for readAngle() and rawAngle()
   uint16_t _offset          = 0;
+};
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AS5600L
+//
+class AS5600L : public AS5600
+{
+public:
+  AS5600L(TwoWire *wire = &Wire);
+
+  bool     setAddress(uint8_t address);
+
+  bool     setI2CUPDT(uint8_t value);
+  uint8_t  getI2CUPDT();
 };
 
 

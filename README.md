@@ -15,7 +15,7 @@ Arduino library for AS5600 magnetic rotation meter.
 
 ### AS5600
 
-**AS5600** is a library for an AS5600 based magnetic rotation meter.
+**AS5600** is a library for an AS5600 / AS5600L based magnetic rotation meter.
 
 **Warning: experimental**
 
@@ -29,7 +29,8 @@ or fluctuating power supply.
 
 ### I2C Address
 
-The I2C address of the **AS5600** is always 0x36.
+The I2C address of the **AS5600** is always 0x36. 
+The newer **AS5600L** supports the change of I2C address, optionally permanent. 
 
 To use more than one **AS5600** on one I2C bus, see Multiplexing below.
 
@@ -395,6 +396,12 @@ You need a sub-micro second hardware timer to measure the pulse width
 with enough precision to get the max resolution.
 
 When PWM OUT is selected **readAngle()** will still return valid values.
+
+
+## Setting I2C address AS5600L
+
+(TODO)
+
 
 
 ## Multiplexing

@@ -2,8 +2,8 @@
 //    FILE: unit_test_001.cpp
 //  AUTHOR: Rob Tillaart
 //    DATE: 2022-05-28
-// PURPOSE: unit tests for the SHEX Serial HEX library
-//          https://github.com/RobTillaart/SHEX
+// PURPOSE: unit tests for the AS5600 library
+//          https://github.com/RobTillaart/AS5600
 //          https://github.com/Arduino-CI/arduino_ci/blob/master/REFERENCE.md
 //
 
@@ -28,6 +28,7 @@
 // assertNotInfinity(actual);                      // !isinf(a)
 // assertNAN(arg);                                 // isnan(a)
 // assertNotNAN(arg);                              // !isnan(a)
+
 
 #include <ArduinoUnitTests.h>
 
