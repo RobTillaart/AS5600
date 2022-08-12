@@ -16,6 +16,7 @@ Arduino library for AS5600 magnetic rotation meter.
 ### AS5600
 
 **AS5600** is a library for an AS5600 / AS5600L based magnetic rotation meter.
+These sensors are pin compatible (always check datasheet).
 
 **Warning: experimental**
 
@@ -29,16 +30,19 @@ or fluctuating power supply.
 
 ### I2C Address
 
-The I2C address of the **AS5600** is always 0x36. 
-The newer **AS5600L** supports the change of I2C address, optionally permanent. 
+The I2C address of the **AS5600** is always 0x36.
 
 To use more than one **AS5600** on one I2C bus, see Multiplexing below.
+
+The I2C address of the **AS5600L** is default 0x40.
+The newer **AS5600L** supports the change of I2C address, optionally permanent. 
 
 
 ### OUT pin
 
 The sensor has an output pin named **OUT**.
-This pin can be used for an analogue or PWM output signal.
+This pin can be used for an analogue or PWM output signal (AS5600),
+and only for PWM by the AS5600L.
 
 See **Analogue Pin** and **PWM Pin** below.
 
@@ -47,7 +51,7 @@ Examples are added to show how to use this pin with **setOutputMode()**.
 
 ### PGO pin
 
-Not tested.
+Not tested. ==> Read the datasheet!
 
 PGO stands for Programming Option, it is used to calibrate / program the sensor.
 As the sensor can be programmed only a few times one should
@@ -121,7 +125,7 @@ directionPin.
 If the pin is set to 255, the default value, there will be software 
 direction control instead of hardware control.
 See below.
-- **bool begin(int sda, int scl, uint8_t directionPin = 255)** idem, 
+- **bool begin(int dataPin, int clockPin, uint8_t directionPin = 255)** idem, 
 for the ESP32 where one can choose the I2C pins.
 If the pin is set to 255, the default value, there will be software 
 direction control instead of hardware control.
@@ -269,18 +273,19 @@ Please read datasheet for details.
 Please read datasheet twice.
 
 The burn functions are used to make settings persistent. 
-As these functions can only be called one or three times, 
-they are highly permanent, therefore they are commented in the library.
+These burn functions are highly permanent, therefore they are commented in the library.
+Please read datasheet twice, before uncomment them.
 
-The risk is that you make your as5600 **USELESS**.
+The risk is that you make your AS5600 / AS5600L **USELESS**.
 
 **USE AT OWN RISK**
 
 - **uint8_t getZMCO()** reads back how many times the ZPOS and MPOS 
 registers are written to permanent memory. 
-You can only burn a new Angle 3 times to the AS5600.
+You can only burn a new Angle 3 times to the AS5600, and only 2 times for the AS5600L.
 - **void burnAngle()** writes the ZPOS and MPOS registers to permanent memory. 
-You can only burn a new Angle maximum **THREE** times to the AS5600.
+You can only burn a new Angle maximum **THREE** times to the AS5600
+and **TWO** times for the AS5600L.
 - **void burnSetting()** writes the MANG register to permanent memory. 
 You can write this only **ONE** time to the AS5600.
 
@@ -309,13 +314,16 @@ TODO: measure performance impact.
 TODO: investigate impact on functionality of other registers.
 
 
-## Analogue OUT
+## Analog OUT
 
-(details datasheet - page 25)
+(details datasheet - page 25 = AS5600)
 
 The OUT pin can be configured with the function:
 
 - **bool setOutputMode(uint8_t outputMode)**
+
+
+#### AS5600
 
 When the analog OUT mode is set the OUT pin provides a voltage
 which is linear with the angle. 
@@ -332,9 +340,15 @@ To measure these angles a 10 bit ADC or higher is needed.
 When analog OUT is selected **readAngle()** will still return valid values.
 
 
+#### AS5600L
+
+The AS5600L does **NOT** support analog OUT.
+Both mode 0 and 1 will set the OUT pin to VDD (+5V0 or 3V3).
+
+
 ## PWM OUT
 
-(details datasheet - page 27)
+(details datasheet - page 27 = AS5600)
 
 The OUT pin can be configured with the function:
 
@@ -398,12 +412,6 @@ with enough precision to get the max resolution.
 When PWM OUT is selected **readAngle()** will still return valid values.
 
 
-## Setting I2C address AS5600L
-
-(TODO)
-
-
-
 ## Multiplexing
 
 The I2C address of the **AS5600** is always 0x36.
@@ -417,6 +425,26 @@ Finally the sensor has an analogue output **OUT**.
 This output could be used to connect multiple sensors to different analogue ports of the processor.
 
 **Warning**: If and how well this analog option works is not verified or tested.
+
+
+## AS5600L
+
+- **AS5600L(uint8_t address = 0x40, TwoWire \*wire = &Wire)** constructor.
+As the I2C address can be changed in the AS5600L, the address is a parameter of the constructor.
+This is a difference with the AS5600 constructor.
+
+
+### Setting I2C address
+
+- **bool setAddress(uint8_t address)** Returns false if the I2C address is not in valid range (8-119).
+
+
+### Setting I2C UPDT
+
+TODO - what is this UPDT?  page 30 - AS5600L 
+
+- **bool setI2CUPDT(uint8_t value)**
+- **uint8_t getI2CUPDT()**
 
 
 ## Operational
@@ -453,12 +481,18 @@ Some ideas are kept here so they won't get lost.
 priority is relative
 
 
-#### high prio
+#### high priority
 
 - get hardware to test.
 - improve documentation.
+  - AS5600L what is I2CUPDT register for
+- fix for AS5600L does not support analog OUT
+  - type field?
+  - other class hierarchy
 
-#### med prio
+
+
+#### medium priority
 
 - limit the **setOffset()** to -359.99 .. 359.99
 - investigate **readMagnitude()**
@@ -467,7 +501,7 @@ priority is relative
   - basic performance per function
   - I2C improvements
   - software direction
-- investigate OUT behavior in practice
+- investigate OUT behaviour in practice
   - analogue
   - PWM
 - write examples:
@@ -475,7 +509,7 @@ priority is relative
   - different configuration options
 - create **changeLog.md**
 
-#### low prio
+#### low priority
 
 - add error handling
 - investigate PGO programming pin.

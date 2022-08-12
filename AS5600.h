@@ -82,7 +82,7 @@ public:
 
 #if defined (ESP8266) || defined(ESP32)
            //  255 is software controlled direction pin
-  bool     begin(int sda, int scl, uint8_t directionPin = 255);
+  bool     begin(int dataPin, int clockPin, uint8_t directionPin = 255);
 #endif
            //  255 is software controlled direction pin
   bool     begin(uint8_t directionPin = 255);
@@ -229,10 +229,11 @@ protected:
 class AS5600L : public AS5600
 {
 public:
-  AS5600L(TwoWire *wire = &Wire);
+  AS5600L(uint8_t address = 0x40, TwoWire *wire = &Wire);
 
   bool     setAddress(uint8_t address);
 
+  //       what is UPDT?
   bool     setI2CUPDT(uint8_t value);
   uint8_t  getI2CUPDT();
 };
