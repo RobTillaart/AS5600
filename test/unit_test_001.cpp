@@ -99,18 +99,28 @@ unittest(test_constants)
 unittest(test_constructor)
 {
   AS5600 as5600;
-
   as5600.begin(4);
-  assertTrue(as5600.isConnected());  // keep CI happy
+  assertTrue(as5600.isConnected());  //  keep CI happy
+
+  AS5600L asl(0x40);
+  asl.begin(5);
+  assertTrue(asl.isConnected());     //  keep CI happy
 }
 
 
 unittest(test_address)
 {
   AS5600 as5600;
-
   as5600.begin(4);
   assertEqual(0x36, as5600.getAddress());
+
+  AS5600L asl;
+  as5600.begin(5);
+  assertEqual(0x40, as5600.getAddress());
+  
+  AS5600L asl2(0x41);
+  as5600.begin(6);
+  assertEqual(0x41, as5600.getAddress());
 }
 
 
