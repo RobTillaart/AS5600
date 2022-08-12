@@ -116,11 +116,11 @@ unittest(test_address)
 
   AS5600L asl;
   as5600.begin(5);
-  assertEqual(0x40, as5600.getAddress());
+  assertEqual(0x40, asl.getAddress());
   
   AS5600L asl2(0x41);
-  as5600.begin(6);
-  assertEqual(0x41, as5600.getAddress());
+  asl2.begin(6);
+  assertEqual(0x41, asl2.getAddress());
 }
 
 
