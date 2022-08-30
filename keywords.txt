@@ -3,6 +3,7 @@
 
 # Data types (KEYWORD1)
 AS5600	KEYWORD1
+AS5600L	KEYWORD1
 
 
 # Methods and Functions (KEYWORD2)

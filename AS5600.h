@@ -233,7 +233,8 @@ public:
 
   bool     setAddress(uint8_t address);
 
-  //       what is UPDT?
+  //       UPDT = UPDATE
+  //       are these two needed?
   bool     setI2CUPDT(uint8_t value);
   uint8_t  getI2CUPDT();
 };

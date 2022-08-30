@@ -520,17 +520,16 @@ bool AS5600L::setAddress(uint8_t address)
 {
   //  skip reserved I2C addresses 
   if ((address < 8) || (address > 119)) return false;
+  //  no need to update
+  if (_address == address) return true;
 
-  // TODO check if address same?
-  // if (_address == address) return true;
+  //  note address need to be shifted 1 bit.
+  writeReg(AS5600_I2CADDR, address << 1);
+  writeReg(AS5600_I2CUPDT, address << 1);
 
-  _wire->beginTransmission(_address);  //  old address
-  _wire->write(AS5600_I2CADDR);
-   //  note address need to be shifted 1 bit.
-  _wire->write(address << 1);          //  new address
-  _error = _wire->endTransmission();
-  //  remember 
+  //  remember new address.
   _address = address;
+
   return true;
 }
 
