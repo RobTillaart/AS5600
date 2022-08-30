@@ -185,6 +185,8 @@ public:
 
   //  access detail status register
   bool     detectMagnet();
+  bool     magnetTooStrong();
+  bool     magnetTooWeak();
 
 
   //  BURN COMMANDS

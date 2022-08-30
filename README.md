@@ -441,10 +441,12 @@ This is a difference with the AS5600 constructor.
 
 ### Setting I2C UPDT
 
-TODO - what is this UPDT?  page 30 - AS5600L 
+UPDT = update  page 30 - AS5600L 
 
 - **bool setI2CUPDT(uint8_t value)**
 - **uint8_t getI2CUPDT()**
+
+These functions seems to have only a function in relation to **setAddress()** so possibly obsolete in the future.
 
 
 ## Operational
@@ -483,14 +485,9 @@ priority is relative
 
 #### high priority
 
-- get hardware to test.
-- improve documentation.
-  - AS5600L what is I2CUPDT register for
 - fix for AS5600L does not support analog OUT
   - type field?
   - other class hierarchy
-
-
 
 #### medium priority
 
@@ -504,10 +501,10 @@ priority is relative
 - investigate OUT behaviour in practice
   - analogue
   - PWM
+  - need AS5600 on breakout with support
 - write examples:
   - as5600_calibration.ino (needs HW and lots of time)
   - different configuration options
-- create **changeLog.md**
 
 #### low priority
 
@@ -515,5 +512,5 @@ priority is relative
 - investigate PGO programming pin.
 - add mode parameter to offset functions.
   - see getAngularSpeed()
-
+- create **changeLog.md**
 

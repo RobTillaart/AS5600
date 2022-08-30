@@ -30,6 +30,9 @@
 //
 //  0.3.0   2022-07-07  fix #18 invalid mask setConfigure().
 //  0.3.1   2022-08-11  add support for AS5600L (I2C address)
+//                      add magnetTooStrong() + magnetTooWeak();
+//                      add / update examples
+//                      update documentation
 
 
 // TODO
@@ -410,6 +413,18 @@ bool AS5600::detectMagnet()
 }
 
 
+bool AS5600::magnetTooStrong()
+{
+  return (readStatus() & AS5600_MAGNET_HIGH) > 1;
+}
+
+
+bool AS5600::magnetTooWeak()
+{
+  return (readStatus() & AS5600_MAGNET_LOW) > 1;
+}
+
+
 /////////////////////////////////////////////////////////
 //
 //  BURN COMMANDS
@@ -457,7 +472,7 @@ float AS5600::getAngularSpeed(uint8_t mode)
 
 /////////////////////////////////////////////////////////
 //
-//  PRIVATE
+//  PRIVATE AS5600
 //
 uint8_t AS5600::readReg(uint8_t reg)
 {
@@ -512,7 +527,7 @@ uint8_t AS5600::writeReg2(uint8_t reg, uint16_t value)
 //
 AS5600L::AS5600L(uint8_t address, TwoWire *wire) : AS5600(wire)
 {
-  _address = address;   //  0x40 = default address AS5600L.
+  setAddress(address);   //  0x40 = default address AS5600L.
 }
 
 
@@ -520,8 +535,6 @@ bool AS5600L::setAddress(uint8_t address)
 {
   //  skip reserved I2C addresses 
   if ((address < 8) || (address > 119)) return false;
-  //  no need to update
-  if (_address == address) return true;
 
   //  note address need to be shifted 1 bit.
   writeReg(AS5600_I2CADDR, address << 1);
@@ -529,7 +542,6 @@ bool AS5600L::setAddress(uint8_t address)
 
   //  remember new address.
   _address = address;
-
   return true;
 }
 
