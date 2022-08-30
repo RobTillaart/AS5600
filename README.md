@@ -8,7 +8,7 @@
 
 # AS5600
 
-Arduino library for AS5600 magnetic rotation meter.
+Arduino library for AS5600 and AS5600L magnetic rotation meter.
 
 
 ## Description
@@ -21,21 +21,46 @@ These sensors are pin compatible (always check datasheet).
 **Warning: experimental**
 
 The sensor can measure a full rotation in 4096 steps.
-The precision is therefore limited to 0.1°.
-Noise levels unknown, but one might expect it to be effected by electric
+The precision is therefore limited to approx 0.1°.
+Noise levels are unknown, but one might expect that the sensor is affected by electric
 and or magnetic signals in the environment.
 Also unknown is the influence of metals near the sensor or an unstable 
 or fluctuating power supply.
 
+Please share your experiences.
+
+
+### Related libraries
+
+Possible interesting related libraries.
+
+- https://github.com/RobTillaart/Angle
+- https://github.com/RobTillaart/AverageAngle
+- https://github.com/RobTillaart/runningAngle
+
 
 ### I2C Address
 
-The I2C address of the **AS5600** is always 0x36.
+|  sensor  |  address  |  changeable  |
+|:--------:|:---------:|:-------------|
+|  AS5600  |    0x36   | NO           |
+|  AS5600L |    0x40   | YES, check setAddress()  |
 
 To use more than one **AS5600** on one I2C bus, see Multiplexing below.
 
-The I2C address of the **AS5600L** is default 0x40.
-The newer **AS5600L** supports the change of I2C address, optionally permanent. 
+The **AS5600L** supports the change of I2C address, optionally permanent.
+Check the **setAddress()** function for non-permanent change. 
+
+
+### I2C performance
+
+|    board    |  sensor   |  results            |
+|:-----------:|:---------:|:--------------------|
+| Arduino UNO |  AS5600   | not tested          |
+| Arduino UNO |  AS5600L  | work up to 300 KHz. |
+
+
+More tests are needed 
 
 
 ### OUT pin
@@ -251,6 +276,8 @@ Also if one wants to detect minute movements, calling it more often is the way t
 (page 9 datasheet)
 Scale is unclear, can be used as relative scale.
 - **bool detectMagnet()** returns true if device sees a magnet.
+- **bool magnetTooStrong()** idem.
+- **bool magnetTooWeak()** idem.
 
 
 #### Status bits
@@ -446,7 +473,7 @@ UPDT = update  page 30 - AS5600L
 - **bool setI2CUPDT(uint8_t value)**
 - **uint8_t getI2CUPDT()**
 
-These functions seems to have only a function in relation to **setAddress()** so possibly obsolete in the future.
+These functions seems to have only a function in relation to **setAddress()** so possibly obsolete in the future. If you got other insights on these functions please let me know.
 
 
 ## Operational
@@ -487,11 +514,11 @@ priority is relative
 
 - fix for AS5600L does not support analog OUT
   - type field?
-  - other class hierarchy
+  - other class hierarchy?
+  - just ignore?
 
 #### medium priority
 
-- limit the **setOffset()** to -359.99 .. 359.99
 - investigate **readMagnitude()**
   - combination of AGC and MD, ML and MH flags?
 - investigate performance
@@ -505,12 +532,12 @@ priority is relative
 - write examples:
   - as5600_calibration.ino (needs HW and lots of time)
   - different configuration options
+- add mode parameter to offset functions.
+  - see getAngularSpeed()
 
 #### low priority
 
 - add error handling
 - investigate PGO programming pin.
-- add mode parameter to offset functions.
-  - see getAngularSpeed()
 - create **changeLog.md**
 
