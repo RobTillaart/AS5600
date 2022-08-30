@@ -92,6 +92,7 @@ The I2C address of the **AS5600** is always 0x36.
 
 The AS5600 datasheet states it supports Fast-Mode == 400 KHz
 and Fast-Mode-Plus == 1000 KHz. 
+Tests with a AS5600L failed at 400 KHz (needs investigation).
 
 The sensor should connect the I2C lines SDA and SCL and the
 VCC and GND to communicate with the processor.
@@ -99,7 +100,7 @@ The DIR (direction) pin of the sensor should be connected to:
 
 - **GND** = fixed clockwise(\*)
 - **VCC** = fixed counter clock wise
-- a free IO pin of the processor = under library control.
+- a free floating IO pin of the processor = under library control.
 
 In the latter setup the library can control the direction of 
 counting by initializing this pin in **begin(directionPin)**, 
@@ -155,8 +156,8 @@ for the ESP32 where one can choose the I2C pins.
 If the pin is set to 255, the default value, there will be software 
 direction control instead of hardware control.
 See below.
-- **bool isConnected()** checks if the address 0x36 is on the I2C bus.
-- **uint8_t getAddress()** returns the fixed device address 0x36. 
+- **bool isConnected()** checks if the address 0x36 (AS5600) is on the I2C bus.
+- **uint8_t getAddress()** returns the fixed device address 0x36 (AS5600).
 
 
 ### Direction
@@ -172,15 +173,14 @@ AS5600_COUNTERCLOCK_WISE (1).
 
 Please read the datasheet for details.
 
-- **bool setZPosition(uint16_t value)** set start position for limited range. Value = 0..4095.
-Returns false if parameter is out of range.
+- **bool setZPosition(uint16_t value)** set start position for limited range. 
+Value = 0..4095. Returns false if parameter is out of range.
 - **uint16_t getZPosition()** get current start position.
-- **bool setMPosition(uint16_t value)** set stop position for limited range. Value = 0..4095.
-Returns false if parameter is out of range.
+- **bool setMPosition(uint16_t value)** set stop position for limited range. 
+Value = 0..4095. Returns false if parameter is out of range.
 - **uint16_t getMPosition()** get current stop position.
 - **bool setMaxAngle(uint16_t value)** set limited range.
-Value = 0..4095.
-Returns false if parameter is out of range.
+Value = 0..4095. Returns false if parameter is out of range.
 See datasheet **Angle Programming**
 - **uint16_t getMaxAngle()** get limited range.
 
@@ -219,7 +219,7 @@ See the .h file for the other get/set functions.
 
 - **bool setHysteresis(uint8_t hysteresis)** Suppresses "noise" on the output when the magnet is not moving.
 In a way one is trading precision for stability.
-returns false if parameter is out of range.
+Returns false if parameter is out of range.
 
 
 ### Read Angle
@@ -233,14 +233,15 @@ This is the one most used.
 e.g. to calibrate the sensor after mounting.
 Typical values are -359.99 - 359.99 probably smaller. 
 Larger values will be mapped back to this interval.
-Be aware that larger values will affect / decrease the precision of the measurements as floats have only 7 significant digits.
+Be aware that larger values will affect / decrease the precision of the 
+measurements as floats have only 7 significant digits.
 Verify this for your application.
 - **float getOffset()** returns offset in degrees.
 
 In #14 there is a discussion about **setOffset()**.
 A possible implementation is to ignore all values outside the
 -359.99 - 359.99 range.
-This would help to keep the precision high.
+This would help to keep the precision high. User responsibility.
 
 
 ### Angular Speed
@@ -266,6 +267,10 @@ Note: the frequency of calling this function of the sensor depends on the applic
 The faster the magnet rotates, the faster it may be called.
 Also if one wants to detect minute movements, calling it more often is the way to go.
 
+An alternative implementation is possible in which the angle is measured twice 
+with a short interval. The only limitation then is that both measurements
+should be within 180° = half a rotation. 
+
 
 ### Status registers
 
@@ -288,7 +293,7 @@ Please read datasheet for details.
 |:-----:|:------|:-------------:|:----------------------|
 | 0-2   |       | not used      |                       |
 | 3     |  MH   | overflow      | 1 = magnet too strong |
-| 4     |  ML   | overflow      | 1 = magnet too weak   |
+| 4     |  ML   | underflow     | 1 = magnet too weak   |
 | 5     |  MD   | magnet detect | 1 = magnet detected   |
 | 6-7   |       | not used      |                       |
 

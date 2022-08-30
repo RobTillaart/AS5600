@@ -8,7 +8,7 @@
 #include "AS5600.h"
 #include "Wire.h"
 
-AS5600L as5600;   //  use default Wire
+AS5600L as5600(0x40);   //  use default Wire
 
 
 void setup()

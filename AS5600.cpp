@@ -527,7 +527,7 @@ uint8_t AS5600::writeReg2(uint8_t reg, uint16_t value)
 //
 AS5600L::AS5600L(uint8_t address, TwoWire *wire) : AS5600(wire)
 {
-  setAddress(address);   //  0x40 = default address AS5600L.
+  _address = address;;   //  0x40 = default address AS5600L.
 }
 
 
