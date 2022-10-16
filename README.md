@@ -96,22 +96,35 @@ Tests with a AS5600L failed at 400 KHz (needs investigation).
 
 The sensor should connect the I2C lines SDA and SCL and the
 VCC and GND to communicate with the processor.
-The DIR (direction) pin of the sensor should be connected to:
 
-- **GND** = fixed clockwise(\*)
-- **VCC** = fixed counter clock wise
-- a free floating IO pin of the processor = under library control.
+#### DIR pin
 
-In the latter setup the library can control the direction of 
-counting by initializing this pin in **begin(directionPin)**, 
-followed by **setDirection(direction)**. For the direction the 
-library defines two constants named:
+From the datasheet, page 30
+
+_Direction (clockwise vs. counter-clockwise)_
+
+_The AS5600 allows controlling the direction of the magnet 
+rotation with the DIR pin. If DIR is connected to GND (DIR = 0)
+a clockwise rotation viewed from the top will generate an 
+increment of the calculated angle. If the DIR pin is connected
+to VDD (DIR = 1) an increment of the calculated angle will 
+happen with counter-clockwise rotation._
+
+This AS5600 library offers a 3rd option for the DIR (direction) pin of the sensor:
+
+1. Connect to **GND** ==> fixed clockwise(\*).  This is the default.
+1. Connect to **VCC** ==> fixed counter-clockwise.
+1. Connect to an IO pin of the processor == Hardware Direction Control by library.
+
+In the 3rd configuration the library controls the direction of counting by initializing 
+this pin in **begin(directionPin)**, followed by **setDirection(direction)**. 
+For the parameter direction the library defines two constants named:
 
 - **AS5600_CLOCK_WISE (0)**
 - **AS5600_COUNTERCLOCK_WISE (1)**
 
 (\*) if **begin()** is called without **directionPin** or with this 
-parameter set to **255**, software direction control is enabled.
+parameter set to **255**, Software Direction Control is enabled.
 
 See Software Direction Control below for more information.
 
@@ -162,11 +175,13 @@ See below.
 
 ### Direction
 
-To define in which way the sensor counts up.
+To define in which way the sensor counts up. (SW control only).
 
 - **void setDirection(uint8_t direction = AS5600_CLOCK_WISE)** idem.
 - **uint8_t getDirection()** returns AS5600_CLOCK_WISE (0) or
 AS5600_COUNTERCLOCK_WISE (1).
+
+See Software Direction Control below for more information.
 
 
 ### Configuration registers
@@ -196,7 +211,7 @@ Returns false if parameter is out of range.
 Please read datasheet for details.
 
 | Bit   | short | Description   | Values                                                | 
-|:-----:|:------|:-------------:|:------------------------------------------------------|
+|:-----:|:------|:--------------|:------------------------------------------------------|
 | 0-1   |  PM   | Power mode    | 00 = NOM, 01 = LPM1, 10 = LPM2, 11 = LPM3             |
 | 2-3   |  HYST | Hysteresis    | 00 = OFF, 01 = 1 LSB, 10 = 2 LSB, 11 = 3 LSB          |
 | 4-5   |  OUTS | Output Stage  | 00 = analog (0-100%), 01 = analog (10-90%), 10 = PWM  |
@@ -330,16 +345,18 @@ Normally one controls the direction of the sensor by connecting the DIR pin
 to one of the available IO pins of the processor. 
 This IO pin is set in the library as parameter of the **begin(directionPin)** function.
 
-The directionPin is default set to 255, which defines a software direction control.
-To have this working one has to connect the DIR pin of the sensor to GND.
-This puts the sensor in a hardware clock wise mode, so it is up to the library 
+The directionPin is default set to 255, which defines a **Software Direction Control**.
+
+To have this working one has to connect the **DIR pin of the sensor to GND**.
+This puts the sensor in a hardware clockwise mode. Then it is up to the library 
 to do the additional math so the **readAngle()** and **rawAngle()** behave as 
-if the DIR pin was connected to the processor IO pin.
+if the DIR pin was connected to a processor IO pin.
 
-The gain is that the user does not need an IO pin for this, 
-which makes connecting the sensor a bit easier.
+The user still calls **setDirection()** as before to change the direction
+of the increments and decrements.
 
-The user still calls **setDirection()** as before to change the direction.
+The advantage is one does not need that extra IO pin from the processor. 
+This makes connecting the sensor a bit easier.
 
 TODO: measure performance impact.
 
