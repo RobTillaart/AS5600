@@ -39,53 +39,6 @@ Possible interesting related libraries.
 - https://github.com/RobTillaart/runningAngle
 
 
-### I2C Address
-
-|  sensor  |  address  |  changeable  |
-|:--------:|:---------:|:-------------|
-|  AS5600  |    0x36   | NO           |
-|  AS5600L |    0x40   | YES, check setAddress()  |
-
-To use more than one **AS5600** on one I2C bus, see Multiplexing below.
-
-The **AS5600L** supports the change of I2C address, optionally permanent.
-Check the **setAddress()** function for non-permanent change. 
-
-
-### I2C performance
-
-|    board    |  sensor   |  results            |
-|:-----------:|:---------:|:--------------------|
-| Arduino UNO |  AS5600   | not tested          |
-| Arduino UNO |  AS5600L  | work up to 300 KHz. |
-
-
-More tests are needed 
-
-
-### OUT pin
-
-The sensor has an output pin named **OUT**.
-This pin can be used for an analogue or PWM output signal (AS5600),
-and only for PWM by the AS5600L.
-
-See **Analogue Pin** and **PWM Pin** below.
-
-Examples are added to show how to use this pin with **setOutputMode()**.
-
-
-### PGO pin
-
-Not tested. ==> Read the datasheet!
-
-PGO stands for Programming Option, it is used to calibrate / program the sensor.
-As the sensor can be programmed only a few times one should
-use this functionality with extreme care.
-See datasheet for a detailed list of steps to be done.
-
-See **Make configuration persistent** below.
-
-
 ## Hardware connection
 
 The I2C address of the **AS5600** is always 0x36.
@@ -97,18 +50,17 @@ Tests with a AS5600L failed at 400 KHz (needs investigation).
 The sensor should connect the I2C lines SDA and SCL and the
 VCC and GND to communicate with the processor.
 
-#### DIR pin
 
-From the datasheet, page 30
+### DIR pin
 
-_Direction (clockwise vs. counter-clockwise)_
+From datasheet, page 30 - Direction (clockwise vs. counter-clockwise)
 
-_The AS5600 allows controlling the direction of the magnet 
+_**The AS5600 allows controlling the direction of the magnet 
 rotation with the DIR pin. If DIR is connected to GND (DIR = 0)
 a clockwise rotation viewed from the top will generate an 
 increment of the calculated angle. If the DIR pin is connected
 to VDD (DIR = 1) an increment of the calculated angle will 
-happen with counter-clockwise rotation._
+happen with counter-clockwise rotation.**_
 
 This AS5600 library offers a 3rd option for the DIR (direction) pin of the sensor:
 
@@ -127,6 +79,54 @@ For the parameter direction the library defines two constants named:
 parameter set to **255**, Software Direction Control is enabled.
 
 See Software Direction Control below for more information.
+
+
+### OUT pin
+
+The sensor has an output pin named **OUT**.
+This pin can be used for an analogue or PWM output signal (AS5600),
+and only for PWM by the AS5600L.
+
+See **Analogue Pin** and **PWM Pin** below.
+
+Examples are added to show how to use this pin with **setOutputMode()**.
+
+See more in the sections Analog OUT and PWM OUT below.
+
+
+### PGO pin
+
+Not tested. ==> Read the datasheet!
+
+PGO stands for Programming Option, it is used to calibrate / program the sensor.
+As the sensor can be programmed only a few times one should
+use this functionality with extreme care.
+See datasheet for a detailed list of steps to be done.
+
+See **Make configuration persistent** below.
+
+
+## I2C 
+
+### Address
+
+|  sensor  |  address  |  changeable  |
+|:--------:|:---------:|:-------------|
+|  AS5600  |    0x36   | NO           |
+|  AS5600L |    0x40   | YES, check setAddress()  |
+
+To use more than one **AS5600** on one I2C bus, see Multiplexing below.
+
+The **AS5600L** supports the change of I2C address, optionally permanent.
+Check the **setAddress()** function for non-permanent change. 
+
+
+### Performance
+
+|    board    |  sensor   |  results        |  notes   |
+|:-----------:|:---------:|:----------------|:---------|
+| Arduino UNO |  AS5600   | up to 900 KHz.  | see #22  |
+| Arduino UNO |  AS5600L  | up to 300 KHz.  |          |
 
 
 ## Interface
@@ -495,7 +495,8 @@ UPDT = update  page 30 - AS5600L
 - **bool setI2CUPDT(uint8_t value)**
 - **uint8_t getI2CUPDT()**
 
-These functions seems to have only a function in relation to **setAddress()** so possibly obsolete in the future. If you got other insights on these functions please let me know.
+These functions seems to have only a function in relation to **setAddress()** so possibly obsolete in the future. 
+If you got other insights on these functions please let me know.
 
 
 ## Operational
@@ -529,15 +530,16 @@ See examples.
 ## Future
 
 Some ideas are kept here so they won't get lost.
-priority is relative
+priority is relative.
 
 
 #### high priority
 
-- fix for AS5600L does not support analog OUT
+- fix for AS5600L as it does not support analog OUT.
   - type field?
-  - other class hierarchy?
+  - other class hierarchy? base class with commonalities?
   - just ignore?
+
 
 #### medium priority
 
@@ -556,10 +558,14 @@ priority is relative
   - different configuration options
 - add mode parameter to offset functions.
   - see getAngularSpeed()
+- check / verify Power-up time
+  - 1 minute (need HW)
+- check Timing Characteristics (datasheet)
+  - is there improvement possible.
+
 
 #### low priority
 
 - add error handling
 - investigate PGO programming pin.
-- create **changeLog.md**
 
