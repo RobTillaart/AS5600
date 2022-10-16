@@ -175,7 +175,7 @@ See below.
 
 ### Direction
 
-To define in which way the sensor counts up. (SW control only).
+To define in which way the sensor counts up.
 
 - **void setDirection(uint8_t direction = AS5600_CLOCK_WISE)** idem.
 - **uint8_t getDirection()** returns AS5600_CLOCK_WISE (0) or
