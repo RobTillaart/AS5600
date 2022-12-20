@@ -24,10 +24,13 @@ const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
 const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4096;
 //  0.00153398078788564122971808758949;
 const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4096;
+//  4.06901041666666e-6
+const float   AS5600_RAW_TO_RPM         = 1.0 / 4096 / 60;
 
 //  getAngularSpeed
 const uint8_t AS5600_MODE_DEGREES       = 0;
 const uint8_t AS5600_MODE_RADIANS       = 1;
+const uint8_t AS5600_MODE_RPM           = 2;
 
 //  CONFIGURE CONSTANTS
 //  check datasheet for details
@@ -204,10 +207,9 @@ public:
   float    getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES);
 
   //  EXPERIMENTAL CUMULATIVE POSITION
-  //  not working yet.
-  int32_t  getCounter();
-  int32_t  getRotations();
-  int32_t  resetCounter();  //  resets counter returns last value.
+  int32_t  getCumulativePosition();
+  int32_t  getRevolutions();
+  int32_t  resetPosition();    //  resets counter returns last value.
 
 
 protected:

@@ -35,6 +35,7 @@ Please share your experiences.
 Possible interesting related libraries.
 
 - https://github.com/RobTillaart/Angle
+- https://github.com/RobTillaart/AngleConvertor
 - https://github.com/RobTillaart/AverageAngle
 - https://github.com/RobTillaart/runningAngle
 
@@ -145,10 +146,13 @@ const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
 const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4096;
 //  0.00153398078788564122971808758949;
 const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4096;
+//  4.06901041666666e-6
+const float   AS5600_RAW_TO_RPM         = 1.0 / 4096 / 60;
 
 //  getAngularSpeed
 const uint8_t AS5600_MODE_DEGREES       = 0;
 const uint8_t AS5600_MODE_RADIANS       = 1;
+const uint8_t AS5600_MODE_RPM           = 2;
 ```
 
 See AS5600.h file (and datasheet) for all constants.
@@ -226,7 +230,8 @@ The setters() returns false if parameter is out of range.
 
 - **bool setPowerMode(uint8_t powerMode)** 
 - **uint8_t getPowerMode()**
-- **bool setHysteresis(uint8_t hysteresis)** Suppresses "noise" on the output when the magnet is not moving.
+- **bool setHysteresis(uint8_t hysteresis)**
+Suppresses "noise" on the output when the magnet is not moving.
 In a way one is trading precision for stability.
 - **uint8_t getHysteresis()**
 - **bool setOutputMode(uint8_t outputMode)**
@@ -248,8 +253,9 @@ Conversion factor AS5600_RAW_TO_DEGREES = 360 / 4096 = 0.087890625
 or use AS5600_RAW_TO_RADIANS if needed. 
 - **uint16_t readAngle()** returns 0 .. 4095. (12 bits) 
 Conversion factor AS5600_RAW_TO_DEGREES = 360 / 4096 = 0.087890625 
-or use AS5600_RAW_TO_RADIANS if needed. 
-This is the one most used. (to investigate difference with raw)
+or use AS5600_RAW_TO_RADIANS if needed.
+The value of this register can be affected by the configuration bits above.
+This is the one most used. 
 - **void setOffset(float degrees)** sets an offset in degrees,
 e.g. to calibrate the sensor after mounting.
 Typical values are -359.99 - 359.99 probably smaller. 
@@ -295,19 +301,20 @@ with a short interval. The only limitation then is that both measurements
 should be within 180° = half a rotation. 
 
 
-### Cumulative counter
+### Cumulative position
 
 ```cpp
   //  EXPERIMENTAL CUMULATIVE POSITION
-  //  not working yet.
-  int32_t  getCounter();
-  int32_t  getRotations();
-  int32_t  resetCounter();  //  resets counter returns last value.
+  int32_t  getCumulativePosition();
+  int32_t  getRevolutions();
+  int32_t  resetPosition();    //  resets position returns last value.
 ```
 
 to elaborate
 
-- call rawAngle() a lot. see example
+- call rawAngle() often enough == at least 4x per rotation
+- example
+- only the revolutions are reset
 
 
 ### Status registers
@@ -566,8 +573,6 @@ priority is relative.
   - other class hierarchy? 
     - base class with commonalities?
   - just ignore?
-- investigate difference **readAngle()** and **rawAngle()**
-  - document this.
 
 #### Should
 

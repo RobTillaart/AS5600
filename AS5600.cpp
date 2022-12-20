@@ -313,12 +313,12 @@ uint16_t AS5600::rawAngle()
   int16_t value = readReg2(AS5600_RAW_ANGLE) & 0x0FFF;
 
   //  whole rotation CW?
-  if ((_lastPosition > 3000) && ( value < 1000))
+  if ((_lastPosition > 2500) && ( value < 1500))
   {
     _position = _position + 4096 - _lastPosition + value;
   }
   //  whole rotation CCW?
-  else if ((value > 3000) && ( _lastPosition < 1000))
+  else if ((value > 2500) && ( _lastPosition < 1500))
   {
     _position = _position - 4096 - _lastPosition + value;
   }
@@ -453,6 +453,10 @@ float AS5600::getAngularSpeed(uint8_t mode)
   {
     return speed * AS5600_RAW_TO_RADIANS;
   }
+  if (mode == AS5600_MODE_RPM)
+  {
+    return speed * AS5600_RAW_TO_RPM;
+  }
   //  default return degrees
   return speed * AS5600_RAW_TO_DEGREES;
 }
@@ -462,21 +466,22 @@ float AS5600::getAngularSpeed(uint8_t mode)
 //
 //  POSITION cumulative
 //
-int32_t AS5600::getCounter()
+int32_t AS5600::getCumulativePosition()
 {
   return _position;
 }
 
 
-int32_t AS5600::getRotations()
+int32_t AS5600::getRevolutions()
 {
   int32_t p =  _position >> 12;
-  if (p < 0) p++;
   return p;
+  // if (p < 0) p++;
+  // return p;
 }
 
 
-int32_t AS5600::resetCounter()
+int32_t AS5600::resetPosition()
 {
   int32_t old = _position;
   _position  = 0;

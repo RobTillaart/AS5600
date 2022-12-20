@@ -6,13 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.3.3] - 2022-12-19
-- add experimental continuous counter.
-  - add getCounter()
-  - add resetCounter()
-  - add getRotations()
+- add experimental continuous position.
+  - add **getCumulativePosition()**
+  - add **resetPosition()**
+  - add **getRevolutions()**
 - move code from .h to .cpp
+- add AS5600_MODE_RPM to **getAngularSpeed()**
 - update readme.md
-
 
 
 ## [0.3.2] - 2022-10-16

@@ -1,5 +1,5 @@
 //
-//    FILE: AS5600_counter.ino
+//    FILE: AS5600_position.ino
 //  AUTHOR: Rob Tillaart
 // PURPOSE: demo
 //    DATE: 2022-12-20
@@ -19,9 +19,9 @@ void setup()
   Serial.println(AS5600_LIB_VERSION);
 
   //  ESP32
-  //  as5600.begin(14, 15);
+  as5600.begin(14, 15);
   //  AVR
-  as5600.begin(4);  //  set direction pin.
+  // as5600.begin(4);  //  set direction pin.
   as5600.setDirection(AS5600_CLOCK_WISE);  // default, just be explicit.
 
   Serial.println(as5600.getAddress());
@@ -45,11 +45,11 @@ void loop()
   if (millis() - lastTime >= 100)
   {
     lastTime = millis();
-    Serial.print(as5600.getCounter());
+    Serial.print(as5600.getCumulativePosition());
     Serial.print("\t");
-    Serial.println(as5600.getRotations());
+    Serial.println(as5600.getRevolutions());
   }
-  if (as5600.getRotations() >= 10) as5600.resetCounter();
+  if (as5600.getRevolutions() >= 10) as5600.resetPosition();
 }
 
 
