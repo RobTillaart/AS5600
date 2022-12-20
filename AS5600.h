@@ -2,7 +2,7 @@
 //
 //    FILE: AS5600.h
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.3.2
+// VERSION: 0.3.3
 // PURPOSE: Arduino library for AS5600 magnetic rotation meter
 //    DATE: 2022-05-28
 //     URL: https://github.com/RobTillaart/AS5600
@@ -12,7 +12,9 @@
 #include "Wire.h"
 
 
-#define AS5600_LIB_VERSION              (F("0.3.2"))
+#define AS5600_LIB_VERSION              (F("0.3.3"))
+
+const uint8_t AS5600_DEFAULT_ADDRESS    = 0x40;
 
 //  setDirection
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
@@ -88,7 +90,7 @@ public:
   bool     begin(uint8_t directionPin = 255);
   bool     isConnected();
 
-  uint8_t  getAddress() { return _address; };  //  0x36
+  uint8_t  getAddress();  //  0x36
 
 
   //  SET CONFIGURE REGISTERS
@@ -201,6 +203,12 @@ public:
   //  mode == 0: degrees /second  (default)
   float    getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES);
 
+  //  EXPERIMENTAL CUMULATIVE POSITION
+  //  not working yet.
+  int32_t  getCounter();
+  int32_t  getRotations();
+  int32_t  resetCounter();  //  resets counter returns last value.
+
 
 protected:
   uint8_t  readReg(uint8_t reg);
@@ -208,10 +216,10 @@ protected:
   uint8_t  writeReg(uint8_t reg, uint8_t value);
   uint8_t  writeReg2(uint8_t reg, uint16_t value);
 
-  uint8_t  _address      = 0x36;
-  uint8_t  _directionPin = 255;
-  uint8_t  _direction    = AS5600_CLOCK_WISE;
-  uint8_t  _error        = 0;
+  uint8_t  _address         = AS5600_DEFAULT_ADDRESS;
+  uint8_t  _directionPin    = 255;
+  uint8_t  _direction       = AS5600_CLOCK_WISE;
+  uint8_t  _error           = 0;
 
   TwoWire*  _wire;
 
@@ -221,6 +229,13 @@ protected:
 
   //  for readAngle() and rawAngle()
   uint16_t _offset          = 0;
+
+
+  //  EXPERIMENTAL
+  //  cumulative position counter
+  //  works only if the sensor is read often enough.
+  int32_t  _position        = 0;
+  int16_t  _lastPosition    = 0;
 };
 
 

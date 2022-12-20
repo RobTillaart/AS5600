@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [0.3.3] - 2022-12-19
+- add experimental continuous counter.
+  - add getCounter()
+  - add resetCounter()
+  - add getRotations()
+- move code from .h to .cpp
+- update readme.md
+
+
+
 ## [0.3.2] - 2022-10-16
 - add CHANGELOG.md
 - update readme.md
