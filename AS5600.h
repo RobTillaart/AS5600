@@ -14,7 +14,7 @@
 
 #define AS5600_LIB_VERSION              (F("0.3.3"))
 
-const uint8_t AS5600_DEFAULT_ADDRESS    = 0x40;
+const uint8_t AS5600_DEFAULT_ADDRESS    = 0x36;
 
 //  setDirection
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW

@@ -18,9 +18,10 @@ void setup()
   Serial.print("AS5600_LIB_VERSION: ");
   Serial.println(AS5600_LIB_VERSION);
 
-  as5600.begin(14, 15);
+  //  ESP32
+  //  as5600.begin(14, 15);
   //  AVR
-  //  as5600.begin(4);  //  set direction pin.
+  as5600.begin(4);  //  set direction pin.
   as5600.setDirection(AS5600_CLOCK_WISE);  // default, just be explicit.
 
   Serial.println(as5600.getAddress());
