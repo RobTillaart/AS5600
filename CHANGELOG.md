@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - add **getRevolutions()**
 - move code from .h to .cpp
 - add AS5600_MODE_RPM to **getAngularSpeed()**
+- add AS5600_RAW_TO_RPM
+- add example for AS5600_MODE_RPM.
+- add AS5600_DEFAULT_ADDRESS
+- add AS5600L_DEFAULT_ADDRESS
 - update readme.md
 
 

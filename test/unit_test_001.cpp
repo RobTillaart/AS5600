@@ -93,6 +93,9 @@ unittest(test_constants)
 
   assertEqual(0, AS5600_WATCHDOG_OFF);
   assertEqual(1, AS5600_WATCHDOG_ON);
+
+  assertEqual(0x36, AS5600_DEFAULT_ADDRESS);
+  assertEqual(0x36, AS5600L_DEFAULT_ADDRESS);
 }
 
 
@@ -117,7 +120,7 @@ unittest(test_address)
   AS5600L asl;
   as5600.begin(5);
   assertEqual(0x40, asl.getAddress());
-  
+
   AS5600L asl2(0x41);
   asl2.begin(6);
   assertEqual(0x41, asl2.getAddress());

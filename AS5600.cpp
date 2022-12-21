@@ -552,7 +552,7 @@ AS5600L::AS5600L(uint8_t address, TwoWire *wire) : AS5600(wire)
 
 bool AS5600L::setAddress(uint8_t address)
 {
-  //  skip reserved I2C addresses 
+  //  skip reserved I2C addresses
   if ((address < 8) || (address > 119)) return false;
 
   //  note address need to be shifted 1 bit.
@@ -567,7 +567,7 @@ bool AS5600L::setAddress(uint8_t address)
 
 bool AS5600L::setI2CUPDT(uint8_t address)
 {
-  //  skip reserved I2C addresses 
+  //  skip reserved I2C addresses
   if ((address < 8) || (address > 119)) return false;
   writeReg(AS5600_I2CUPDT, address << 1);
   return true;

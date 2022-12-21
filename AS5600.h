@@ -14,7 +14,10 @@
 
 #define AS5600_LIB_VERSION              (F("0.3.3"))
 
+//  default addresses
 const uint8_t AS5600_DEFAULT_ADDRESS    = 0x36;
+const uint8_t AS5600L_DEFAULT_ADDRESS   = 0x40;
+
 
 //  setDirection
 const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
@@ -25,7 +28,7 @@ const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4096;
 //  0.00153398078788564122971808758949;
 const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4096;
 //  4.06901041666666e-6
-const float   AS5600_RAW_TO_RPM         = 1.0 / 4096 / 60;
+const float   AS5600_RAW_TO_RPM         = 60.0 / 4096;
 
 //  getAngularSpeed
 const uint8_t AS5600_MODE_DEGREES       = 0;
@@ -90,10 +93,10 @@ public:
   bool     begin(int dataPin, int clockPin, uint8_t directionPin = 255);
 #endif
            //  255 is software controlled direction pin
-  bool     begin(uint8_t directionPin = 255);
+  bool     begin(uint8_t directionPin = 255);  //  MAGIC NR => const int?
   bool     isConnected();
 
-  uint8_t  getAddress();  //  0x36
+  uint8_t  getAddress();  //  0x36 for AS5600, 0x40 for AS5600L
 
 
   //  SET CONFIGURE REGISTERS
@@ -248,7 +251,7 @@ protected:
 class AS5600L : public AS5600
 {
 public:
-  AS5600L(uint8_t address = 0x40, TwoWire *wire = &Wire);
+  AS5600L(uint8_t address = AS5600L_DEFAULT_ADDRESS, TwoWire *wire = &Wire);
 
   bool     setAddress(uint8_t address);
 
