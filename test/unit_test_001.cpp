@@ -97,7 +97,7 @@ unittest(test_constants)
   assertEqual(1, AS5600_WATCHDOG_ON);
 
   assertEqual(0x36, AS5600_DEFAULT_ADDRESS);
-  assertEqual(0x36, AS5600L_DEFAULT_ADDRESS);
+  assertEqual(0x40, AS5600L_DEFAULT_ADDRESS);
 }
 
 
