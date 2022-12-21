@@ -54,9 +54,11 @@ unittest(test_constants)
 
   assertEqual(0, AS5600_MODE_DEGREES);
   assertEqual(1, AS5600_MODE_RADIANS);
+  assertEqual(2, AS5600_MODE_RPM);
 
-  assertEqualFloat(360.0/4096, AS5600_RAW_TO_DEGREES, 0.0001);
+  assertEqualFloat(360.0/4096,    AS5600_RAW_TO_DEGREES, 0.0001);
   assertEqualFloat((PI*2.0)/4096, AS5600_RAW_TO_RADIANS, 0.0001);
+  assertEqualFloat(60/4096,       AS5600_RAW_TO_RPM,     0.0001);
 
   assertEqual(0, AS5600_OUTMODE_ANALOG_100);
   assertEqual(1, AS5600_OUTMODE_ANALOG_90);
