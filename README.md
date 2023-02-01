@@ -15,13 +15,16 @@ Arduino library for AS5600 and AS5600L magnetic rotation meter.
 
 ### AS5600
 
-**AS5600** is a library for an AS5600 / AS5600L based magnetic rotation meter.
-These sensors are pin compatible (always check datasheet).
+**AS5600** is a library for an AS5600 / AS5600L based magnetic **rotation** meter.
+More exact, it measures the angle (rotation wrt reference) and not RPM.
+Multiple angle measurements allows one to calculate / estimate the RPM.
+
+The AS5600 and AS5600L sensors are pin compatible (always check datasheet).
 
 **Warning: experimental**
 
 The sensor can measure a full rotation in 4096 steps.
-The precision is therefore limited to approx 0.1°.
+The precision of the position is therefore limited to approx 0.1°.
 Noise levels are unknown, but one might expect that the sensor is affected by electric
 and or magnetic signals in the environment.
 Also unknown is the influence of metals near the sensor or an unstable 
@@ -31,8 +34,6 @@ Please share your experiences.
 
 
 ### Related libraries
-
-Possible interesting related libraries.
 
 - https://github.com/RobTillaart/Angle
 - https://github.com/RobTillaart/AngleConvertor
@@ -46,7 +47,7 @@ The I2C address of the **AS5600** is always 0x36.
 
 The AS5600 datasheet states it supports Fast-Mode == 400 KHz
 and Fast-Mode-Plus == 1000 KHz. 
-Tests with a AS5600L failed at 400 KHz (needs investigation).
+Tests with an AS5600L (UNO) failed at 400 KHz (needs investigation).
 
 The sensor should connect the I2C lines SDA and SCL and the
 VCC and GND to communicate with the processor.
@@ -113,8 +114,8 @@ See **Make configuration persistent** below.
 
 |  sensor  |  address  |  changeable  |
 |:--------:|:---------:|:-------------|
-|  AS5600  |    0x36   | NO           |
-|  AS5600L |    0x40   | YES, check setAddress()  |
+|  AS5600  |    0x36   |  NO          |
+|  AS5600L |    0x40   |  YES, check setAddress()  |
 
 To use more than one **AS5600** on one I2C bus, see Multiplexing below.
 
@@ -124,14 +125,34 @@ Check the **setAddress()** function for non-permanent change.
 
 ### Performance
 
-|    board    |  sensor   |  results        |  notes   |
-|:-----------:|:---------:|:----------------|:---------|
-| Arduino UNO |  AS5600   | up to 900 KHz.  | see #22  |
-| Arduino UNO |  AS5600L  | up to 300 KHz.  |          |
+|     board     |  sensor   |  results         |  notes  |
+|:-------------:|:---------:|:-----------------|:--------|
+|  Arduino UNO  |  AS5600   |  up to 900 KHz.  |  https://github.com/RobTillaart/AS5600/issues/22
+|  Arduino UNO  |  AS5600L  |  up to 300 KHz.  |
+|  ESP32        |  AS5600   |  no data         |
+|  ESP32        |  AS5600L  |  up to 800 KHz   |
+
+No other boards tested yet.
+
+
+### ESP32 and I2C
+
+When polling the AS5600 with an ESP32 to measure RPM an issue has been reported.
+See https://github.com/RobTillaart/AS5600/issues/28
+
+The problem is that the ESP32 can be blocking for up to one second if there is a
+problem in the connection with the sensor. Using **setWireTimeout()** does not seem
+to solve the problem (2023-01-31). In the issue the goal was to measure the turns 
+of a rotating device at around 3800 RPM. To do this one need roughly 1 angle measurement
+per 5 milliseconds. 
+which  
 
 
 ## Interface
 
+```cpp
+#include "AS5600.h"
+```
 
 ### Constants
 
@@ -214,16 +235,17 @@ Returns false if parameter is out of range.
 - **uint16_t getConfigure()** returns the current configuration register a bit mask.
 
 
-| Bit   | short | Description   | Values                                                | 
-|:-----:|:------|:--------------|:------------------------------------------------------|
-| 0-1   |  PM   | Power mode    | 00 = NOM, 01 = LPM1, 10 = LPM2, 11 = LPM3             |
-| 2-3   |  HYST | Hysteresis    | 00 = OFF, 01 = 1 LSB, 10 = 2 LSB, 11 = 3 LSB          |
-| 4-5   |  OUTS | Output Stage  | 00 = analog (0-100%), 01 = analog (10-90%), 10 = PWM  |
-| 6-7   |  PWMF | PWM frequency | 00 = 115, 01 = 230, 10 = 460, 11 = 920 (Hz)           |
-| 8-9   |  SF   | Slow Filter   | 00 = 16x, 01 = 8x, 10 = 4x, 11 = 2x                   |
-| 10-12 |  FTH  | Fast Filter   | Threshold 000 - 111 check datasheet                   |
-| 13    |  WD   | Watch Dog     | 0 = OFF, 1 = ON                                       |
-| 15-14 |       | not used      |
+|  Bit    |  short  | Description     |  Values                                                | 
+|:-------:|:--------|:----------------|:-------------------------------------------------------|
+|  0-1    |  PM     |  Power mode     |  00 = NOM,  01 = LPM1,   10 = LPM2,   11 = LPM3        |
+|  2-3    |  HYST   |  Hysteresis     |  00 = OFF,  01 = 1 LSB,  10 = 2 LSB,  11 = 3 LSB       |
+|  4-5    |  OUTS   |  Output Stage   |  00 = analog (0-100%), 01 = analog (10-90%), 10 = PWM  |
+|  6-7    |  PWMF   |  PWM frequency  |  00 = 115,  01 = 230,    10 = 460,    11 = 920 (Hz)    |
+|  8-9    |  SF     |  Slow Filter    |  00 = 16x,  01 = 8x,     10 = 4x,     11 = 2x          |
+|  10-12  |  FTH    |  Fast Filter    |  Threshold 000 - 111 check datasheet                   |
+|  13     |  WD     |  Watch Dog      |  0 = OFF,    1 = ON                                    |
+|  15-14  |         |  not used       |  
+
 
 The library has functions to address these fields directly.
 The setters() returns false if parameter is out of range.
@@ -265,7 +287,7 @@ measurements as floats have only 7 significant digits.
 Verify this for your application.
 - **float getOffset()** returns offset in degrees.
 
-In #14 there is a discussion about **setOffset()**.
+In issue #14 there is a discussion about **setOffset()**.
 A possible implementation is to ignore all values outside the
 -359.99 - 359.99 range.
 This would help to keep the precision high. User responsibility.
@@ -305,9 +327,10 @@ should be within 180° = half a rotation.
 
 Since 0.3.3 an experimental cumulative position can be requested from the library.
 The sensor does not provide interrupts to indicate a movement or revolution
-Therefore one has to poll the sensor at a frequency at least 3 times per revolution with **getCumulativePosition()**
+Therefore one has to poll the sensor at a frequency at least **three** times 
+per revolution with **getCumulativePosition()**
 
-The cumulative position consists of 3 parts
+The cumulative position (32 bits) consists of 3 parts
 
 |  bit    |  meaning      |  notes  |
 |:-------:|:--------------|:--------|
@@ -325,7 +348,7 @@ Convenience function.
 The cumulative position does not reset to 0 but to the last known raw angle.
 This way the cumulative position always indicate the (absolute) angle too.
 
-As this code is experimental, names might change in the future.
+As this code is experimental, names might change in the future (0.4.0).
 As the function are mostly about counting revolutions the current thoughts for new names are:
 
 ```cpp
@@ -591,6 +614,8 @@ priority is relative.
   - other class hierarchy? 
     - base class with commonalities?
   - just ignore?
+- rename revolution functions (0.4.0)
+
 
 #### Should
 
@@ -613,10 +638,15 @@ priority is relative.
   - 1 minute (need HW)
 - check Timing Characteristics (datasheet)
   - is there improvement possible.
+- investigate why AS5600L failed at 400 KHz I2C
+  - repeatable?
 
 
 #### Could
 
 - add error handling
 - investigate PGO programming pin.
+
+
+#### Wont
 
