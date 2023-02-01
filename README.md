@@ -13,7 +13,7 @@ Arduino library for AS5600 and AS5600L magnetic rotation meter.
 
 ## Description
 
-### AS5600
+#### AS5600
 
 **AS5600** is a library for an AS5600 / AS5600L based magnetic **rotation** meter.
 More exact, it measures the angle (rotation wrt reference) and not RPM.
@@ -33,7 +33,7 @@ or fluctuating power supply.
 Please share your experiences.
 
 
-### Related libraries
+#### Related libraries
 
 - https://github.com/RobTillaart/Angle
 - https://github.com/RobTillaart/AngleConvertor
@@ -51,9 +51,10 @@ Tests with an AS5600L (UNO) failed at 400 KHz (needs investigation).
 
 The sensor should connect the I2C lines SDA and SCL and the
 VCC and GND to communicate with the processor.
+Do not forget to add the pull up resistors to improve the I2C signals.
 
 
-### DIR pin
+#### DIR pin
 
 From datasheet, page 30 - Direction (clockwise vs. counter-clockwise)
 
@@ -83,7 +84,7 @@ parameter set to **255**, Software Direction Control is enabled.
 See Software Direction Control below for more information.
 
 
-### OUT pin
+#### OUT pin
 
 The sensor has an output pin named **OUT**.
 This pin can be used for an analogue or PWM output signal (AS5600),
@@ -96,7 +97,7 @@ Examples are added to show how to use this pin with **setOutputMode()**.
 See more in the sections Analog OUT and PWM OUT below.
 
 
-### PGO pin
+#### PGO pin
 
 Not tested. ==> Read the datasheet!
 
@@ -110,7 +111,7 @@ See **Make configuration persistent** below.
 
 ## I2C 
 
-### Address
+#### Address
 
 |  sensor  |  address  |  changeable  |
 |:--------:|:---------:|:-------------|
@@ -123,7 +124,7 @@ The **AS5600L** supports the change of I2C address, optionally permanent.
 Check the **setAddress()** function for non-permanent change. 
 
 
-### Performance
+#### Performance
 
 |     board     |  sensor   |  results         |  notes  |
 |:-------------:|:---------:|:-----------------|:--------|
@@ -135,7 +136,7 @@ Check the **setAddress()** function for non-permanent change.
 No other boards tested yet.
 
 
-### ESP32 and I2C
+#### ESP32 and I2C
 
 When polling the AS5600 with an ESP32 to measure RPM an issue has been reported.
 See https://github.com/RobTillaart/AS5600/issues/28
@@ -154,7 +155,7 @@ which
 #include "AS5600.h"
 ```
 
-### Constants
+#### Constants
 
 Most important are:
 
@@ -180,7 +181,7 @@ See AS5600.h file (and datasheet) for all constants.
 Also Configuration bits below for configuration related ones.
 
 
-### Constructor + I2C
+#### Constructor + I2C
 
 - **AS5600(TwoWire \*wire = &Wire)** Constructor with optional Wire 
 interface as parameter.
@@ -198,7 +199,7 @@ See below.
 - **uint8_t getAddress()** returns the fixed device address 0x36 (AS5600).
 
 
-### Direction
+#### Direction
 
 To define in which way the sensor counts up.
 
@@ -209,7 +210,7 @@ AS5600_COUNTERCLOCK_WISE (1).
 See Software Direction Control below for more information.
 
 
-### Configuration registers
+#### Configuration registers
 
 Please read the datasheet for details.
 
@@ -268,7 +269,7 @@ In a way one is trading precision for stability.
 - **uint8_t getWatchDog()**
 
 
-### Read Angle
+#### Read Angle
 
 - **uint16_t rawAngle()** returns 0 .. 4095. (12 bits) 
 Conversion factor AS5600_RAW_TO_DEGREES = 360 / 4096 = 0.087890625 
@@ -293,7 +294,7 @@ A possible implementation is to ignore all values outside the
 This would help to keep the precision high. User responsibility.
 
 
-### Angular Speed
+#### Angular Speed
 
 - **float getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES)** is an experimental function that returns 
 an approximation of the angular speed in rotations per second.
@@ -323,7 +324,7 @@ with a short interval. The only limitation then is that both measurements
 should be within 180° = half a rotation. 
 
 
-### Cumulative position (experimental)
+#### Cumulative position (experimental)
 
 Since 0.3.3 an experimental cumulative position can be requested from the library.
 The sensor does not provide interrupts to indicate a movement or revolution
@@ -358,7 +359,7 @@ int32_t resetRevolutions()   replaces resetPosition()
 ```
 
 
-### Status registers
+#### Status registers
 
 - **uint8_t readStatus()** see Status bits below.
 - **uint8_t readAGC()** returns the Automatic Gain Control.
@@ -384,7 +385,7 @@ Please read datasheet for details.
 |  6-7  |       | not used      |                       |
 
 
-### Make configuration persistent.
+## Make configuration persistent.
 
 **USE AT OWN RISK**
 
@@ -406,6 +407,8 @@ You can only burn a new Angle maximum **THREE** times to the AS5600
 and **TWO** times for the AS5600L.
 - **void burnSetting()** writes the MANG register to permanent memory. 
 You can write this only **ONE** time to the AS5600.
+
+**USE AT OWN RISK**
 
 
 ## Software Direction Control
@@ -555,12 +558,12 @@ As the I2C address can be changed in the AS5600L, the address is a parameter of 
 This is a difference with the AS5600 constructor.
 
 
-### Setting I2C address
+#### Setting I2C address
 
 - **bool setAddress(uint8_t address)** Returns false if the I2C address is not in valid range (8-119).
 
 
-### Setting I2C UPDT
+#### Setting I2C UPDT
 
 UPDT = update  page 30 - AS5600L 
 
