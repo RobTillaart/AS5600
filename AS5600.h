@@ -215,7 +215,7 @@ public:
   //  converts last position to whole revolutions.
   int32_t  getRevolutions();
   //  resets position, returns last position.
-  int32_t  resetPosition();
+  int32_t  resetPosition(int32_t position = 0);
 
 
 protected:
