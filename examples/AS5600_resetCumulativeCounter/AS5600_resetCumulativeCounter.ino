@@ -2,16 +2,13 @@
 //    FILE: AS5600_resetCumulativeCounter.ino
 //  AUTHOR: Daniel-Frenkel, (slightly by Rob Tillaart)
 // PURPOSE: demo - see issue #30
-//    DATE: 2023-0
-
-
-daniel-frenkel
 
 
 #include "AS5600.h"
 #include "Wire.h"
 
 AS5600L as5600;   //  use default Wire
+
 
 void setup()
 {
