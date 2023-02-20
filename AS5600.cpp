@@ -456,12 +456,14 @@ int32_t AS5600::getCumulativePosition()
   int16_t value = readReg2(AS5600_RAW_ANGLE) & 0x0FFF;
 
   //  whole rotation CW?
-  if ((_lastPosition > 2048) && ( value < (_lastPosition - 2048)))  //  less than half a circle
+  //  less than half a circle
+  if ((_lastPosition > 2048) && ( value < (_lastPosition - 2048)))
   {
     _position = _position + 4096 - _lastPosition + value;
   }
   //  whole rotation CCW?
-  else if ((value > 2048) && ( _lastPosition < (value - 2048)))  //  less than half a circle
+  //  less than half a circle
+  else if ((value > 2048) && ( _lastPosition < (value - 2048)))
   {
     _position = _position - 4096 - _lastPosition + value;
   }
@@ -482,6 +484,14 @@ int32_t AS5600::getRevolutions()
 
 
 int32_t AS5600::resetPosition(int32_t position)
+{
+  int32_t old = _position;
+  _position = position;
+  return old;
+}
+
+
+int32_t AS5600::resetCumulativePosition(int32_t position)
 {
   _lastPosition = readReg2(AS5600_RAW_ANGLE) & 0x0FFF;
   int32_t old = _position;

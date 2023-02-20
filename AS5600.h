@@ -214,8 +214,12 @@ public:
   int32_t  getCumulativePosition();
   //  converts last position to whole revolutions.
   int32_t  getRevolutions();
-  //  resets position, returns last position.
+  //  resets position only (not the i)
+  //  returns last position but not internal lastPosition.
   int32_t  resetPosition(int32_t position = 0);
+  //  resets position and internal lastPosition
+  //  returns last position.
+  int32_t  resetCumulativePosition(int32_t position = 0);
 
 
 protected:

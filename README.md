@@ -345,15 +345,14 @@ Functions are:
 - **int32_t getCumulativePosition()** reads sensor and updates cumulative position.
 - **int32_t getRevolutions()** converts last position to whole revolutions.
 Convenience function.
-- **int32_t resetPosition(int32_t position = 0)** resets **"revolutions"** to position.
-Default it resets to 0. 
-The lastPosition of the AS5600 is set to the current value, 
-effectively setting it to 0.
-returns last position. 
-The cumulative position does not reset to 0 but to the last known raw angle.
-This way the cumulative position always indicate the (absolute) angle too.
+- **int32_t resetPosition(int32_t position = 0)** resets the "revolutions" to position (default 0).
+It does not reset the delta (rotation) since last call to **getCumulativePosition()**.
+Returns last position (before reset).
+- **int32_t resetCumulativePosition(int32_t position = 0)** completely resets the cumulative counter. 
+This includes the delta (rotation) since last call to **getCumulativePosition()**.
+Returns last position (before reset).
 
-As this code is experimental, names might change in the future (0.4.0).
+As this code is experimental, names might change in the future (0.4.0)?
 As the function are mostly about counting revolutions the current thoughts for new names are:
 
 ```cpp
