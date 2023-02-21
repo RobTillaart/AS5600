@@ -16,7 +16,7 @@ Arduino library for AS5600 and AS5600L magnetic rotation meter.
 #### AS5600
 
 **AS5600** is a library for an AS5600 / AS5600L based magnetic **rotation** meter.
-More exact, it measures the angle (rotation wrt reference) and not RPM.
+More exact, it measures the angle (rotation w.r.t. reference) and not RPM.
 Multiple angle measurements allows one to calculate / estimate the RPM.
 
 The AS5600 and AS5600L sensors are pin compatible (always check datasheet).
@@ -652,6 +652,8 @@ priority is relative.
 
 - add error handling
 - investigate PGO programming pin.
+- check for compatible devices
+  - AS5200 ?
 
 
 #### Wont

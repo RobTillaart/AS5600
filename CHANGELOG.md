@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.3.6] - 2023-02-20
 - add **resetCumulativePosition(int32_t position)** to completely reset the cumulative counter. 
 This includes the delta since last call to **getCumulativePosition()**.
-- add parameter position to **resetPosition()** so new position can be set. 
+- add parameter position to **resetPosition(int32_t position)** so a new position can be set. 
 This does not reset the delta since last call to **getCumulativePosition()**.
 - update readme.md
 
