@@ -51,7 +51,7 @@ void loop()
   Serial.print("\t");
   Serial.print(stop - start);
   Serial.print("\t");
-  Serial.print(as5600.readAngle());
+  Serial.print(angle);
   Serial.print("\t");
   Serial.println(as5600.rawAngle() * AS5600_RAW_TO_DEGREES);
 
@@ -59,4 +59,5 @@ void loop()
 }
 
 
-// -- END OF FILE --
+//  -- END OF FILE --
+
