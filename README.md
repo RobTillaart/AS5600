@@ -97,6 +97,12 @@ Examples are added to show how to use this pin with **setOutputMode()**.
 See more in the sections Analog OUT and PWM OUT below.
 
 
+##### Note: (From Zipdox2 - See issue #36)
+Some AS5600 modules seem to have a resistor between **PGO** and **GND**.
+This causes the AS5600 to disable the output (to use it for programming, see datasheet). 
+This resistor needs to be removed to use the **OUT** pin.
+
+
 #### PGO pin
 
 Not tested. ==> Read the datasheet!
