@@ -429,9 +429,15 @@ bool AS5600::magnetTooWeak()
 //  }
 //
 //
+//  See https://github.com/RobTillaart/AS5600/issues/38
 //  void AS5600::burnSetting()
 //  {
-//    writeReg(AS5600_BURN, x0x40);
+//    writeReg(AS5600_BURN, 0x40);
+//    delay(5);
+//    writeReg(AS5600_BURN, 0x01);
+//    writeReg(AS5600_BURN, 0x11);
+//    writeReg(AS5600_BURN, 0x10);
+//    delay(5);
 //  }
 
 
