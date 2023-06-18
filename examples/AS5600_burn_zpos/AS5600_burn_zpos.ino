@@ -81,7 +81,7 @@ void burn_zpos()
 
   bool OK = true;
   OK = OK && as5600.setZPosition(ZPOS);
-  OK = OK && (ZPOS = as5600.getZPosition();
+  OK = OK && (ZPOS == as5600.getZPosition());
   if (OK == false)
   {
     Serial.println("\nERROR: in settings, burn_zpos() cancelled.");
