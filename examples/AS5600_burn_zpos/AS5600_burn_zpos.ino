@@ -1,17 +1,19 @@
 //
-//    FILE: AS5600_burn_conf_mang.ino
+//    FILE: AS5600_zpos.ino
 //  AUTHOR: Rob Tillaart
-// PURPOSE: demo
+// PURPOSE: demo (not tested yet - see issue #38)
 //    DATE: 2023-06-18
 
 
 //  WARNING
-//  As burning the settings can only be done once this sketch has to be used with care.
+//  As burning the angle can only be done three times this sketch has to be used with care.
 //
-//  You need to 
-//  - uncomment burnSettings() in AS5600.h and AS5600.cpp.
+//  You need to
+//  - read the datasheet so you understand what you do
+//  - read issue #38 to understand the discussion that lead to this sketch
+//  - uncomment burnAngle() in AS5600.h and AS5600.cpp.
 //  - adjust settings and MaxAngle in burn_zpos() function below ==> line 77++
-//  - uncomment line 105
+//  - uncomment line 105 of this sketch
 
 
 #include "AS5600.h"
