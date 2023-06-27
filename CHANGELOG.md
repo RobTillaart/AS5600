@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.3.8] - 2023-06-18
 - add **void burnSetting()** improvements from #38
-- add sketches to burn settings (use with care!)
+  - use with care
+  - add sketches to burn settings (use with care!)
 - minor edits.
 
 

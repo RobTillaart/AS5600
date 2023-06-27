@@ -394,28 +394,38 @@ Please read datasheet for details.
 |  6-7  |       | not used      |                       |
 
 
-## Make configuration persistent.
+## Make configuration persistent. BURN
 
-**USE AT OWN RISK**
+#### Read burn count
 
-Please read datasheet **twice** as these changes are not reversible.
+- **uint8_t getZMCO()** reads back how many times the ZPOS and MPOS 
+registers are written to permanent memory. 
+You can only burn a new Angle 3 times to the AS5600, and only 2 times for the AS5600L. This function is safe as it is readonly.
+
+
+#### BURN function
 
 The burn functions are used to make settings persistent. 
 These burn functions are permanent, therefore they are commented in the library.
 Please read datasheet twice, before uncomment them.
 
+**USE AT OWN RISK**
+
+Please read datasheet **twice** as these changes are not reversible.
+
 The risk is that you make your AS5600 / AS5600L **USELESS**.
 
 **USE AT OWN RISK**
 
-- **uint8_t getZMCO()** reads back how many times the ZPOS and MPOS 
-registers are written to permanent memory. 
-You can only burn a new Angle 3 times to the AS5600, and only 2 times for the AS5600L.
+These are the two "unsafe" functions:
 - **void burnAngle()** writes the ZPOS and MPOS registers to permanent memory. 
 You can only burn a new Angle maximum **THREE** times to the AS5600
 and **TWO** times for the AS5600L.
 - **void burnSetting()** writes the MANG register to permanent memory. 
 You can write this only **ONE** time to the AS5600.
+
+Some discussion about burning see issue #38  
+(I have no hands on experience with this functions)
 
 **USE AT OWN RISK**
 
