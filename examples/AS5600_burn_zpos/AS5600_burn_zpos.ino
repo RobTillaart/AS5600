@@ -1,5 +1,5 @@
 //
-//    FILE: AS5600_zpos.ino
+//    FILE: AS5600_burn_zpos.ino
 //  AUTHOR: Rob Tillaart
 // PURPOSE: demo (not tested yet - see issue #38)
 //    DATE: 2023-06-18
