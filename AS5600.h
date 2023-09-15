@@ -89,10 +89,9 @@ class AS5600
 public:
   AS5600(TwoWire *wire = &Wire);
 
-#if defined (ESP8266) || defined(ESP32)
   //  AS5600_SW_DIRECTION_PIN is software controlled direction pin
   bool     begin(int dataPin, int clockPin, uint8_t directionPin = AS5600_SW_DIRECTION_PIN);
-#endif
+
   bool     begin(uint8_t directionPin = AS5600_SW_DIRECTION_PIN);
   bool     isConnected();
 
