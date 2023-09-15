@@ -55,6 +55,8 @@ AS5600::AS5600(TwoWire *wire)
 }
 
 
+#if defined (ESP8266) || defined(ESP32) || defined(STM32)
+
 bool AS5600::begin(int dataPin, int clockPin, uint8_t directionPin)
 {
   _directionPin = directionPin;
@@ -75,6 +77,8 @@ bool AS5600::begin(int dataPin, int clockPin, uint8_t directionPin)
   if (! isConnected()) return false;
   return true;
 }
+
+#endif
 
 
 bool AS5600::begin(uint8_t directionPin)
