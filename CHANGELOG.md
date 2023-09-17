@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.4.1] - 2023-09-16
-- fix #45 support STM32 set I2C pins
+- fix #45 support STM32 set I2C pins  ARDUINO_ARCH_STM32
 - update readme badges
 - minor edits
 

@@ -79,7 +79,7 @@ bool AS5600::begin(int dataPin, int clockPin, uint8_t directionPin)
 #endif
 
 
-#if defined (STM32)
+#if defined (ARDUINO_ARCH_STM32)
 
 bool AS5600::begin(int dataPin, int clockPin, uint8_t directionPin)
 {
