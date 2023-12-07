@@ -36,6 +36,15 @@ or fluctuating power supply.
 Please share your experiences.
 
 
+#### 0.5.0 Breaking change
+
+Version 0.5.0 introduced a breaking change.
+You cannot set the pins in **begin()** any more.
+This reduces the dependency of processor dependent Wire implementations.
+The user has to call **Wire.begin()** and can optionally set the Wire pins 
+before calling **begin()**.
+
+
 #### Related libraries
 
 - https://github.com/RobTillaart/Angle
