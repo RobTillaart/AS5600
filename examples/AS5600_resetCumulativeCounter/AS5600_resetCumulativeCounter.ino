@@ -19,7 +19,7 @@ void setup()
   
   Wire.begin(14, 15);      //  ESP32
 
-  as5600.begin():
+  as5600.begin();
   as5600.setAddress(0x40);   //  AS5600L has address
 
   as5600.setDirection(AS5600_CLOCK_WISE);  //  default, just be explicit.

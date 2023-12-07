@@ -19,7 +19,7 @@ void setup()
 
   Wire.setSDA(14);
   Wire.setSCL(15);
-  Wire.begin()
+  Wire.begin();
 
   as5600.begin(4);  //  set direction pin.
   as5600.setDirection(AS5600_CLOCK_WISE);  //  default, just be explicit.

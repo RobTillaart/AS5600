@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - refactor API, begin()
 - update readme.md
 - update examples
+- add examples
 - patch library.properties  =>  category=Sensors
 
 ----
