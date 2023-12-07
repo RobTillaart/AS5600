@@ -92,7 +92,8 @@ public:
   bool     begin(uint8_t directionPin = AS5600_SW_DIRECTION_PIN);
   bool     isConnected();
 
-  //  address = 0x36 for AS5600, 0x40 for AS5600L
+  //  address = fixed   0x36 for AS5600, 
+  //          = default 0x40 for AS5600L
   uint8_t  getAddress();
 
 
