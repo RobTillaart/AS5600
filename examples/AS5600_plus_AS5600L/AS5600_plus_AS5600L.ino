@@ -2,6 +2,7 @@
 //  AUTHOR: laptophead
 // PURPOSE: showing working of a AS5600 and AS5600L side by side
 //     URL: https://github.com/RobTillaart/AS5600
+//     URL: https://github.com/RobTillaart/AS5600/issues/48
 
 
 #include "AS5600.h"
@@ -41,8 +42,6 @@ void setup()
   Serial.println(as5600_R.getAddress());
   Serial.print ("Address For AS5600 L ");
   Serial.println(as5600_L.getAddress());
-
-  int b = as5600_R.isConnected();
 
   Serial.print("Connect_R: ");
   Serial.println(as5600_R.isConnected() ? "true" : "false");
