@@ -231,23 +231,24 @@ unittest(test_offset_II)
   assertEqualFloat(330, as5600.getOffset(), 0.05);
 
 
+  //  as cummulative error can be larger ==> 0.1 
   as5600.setOffset(200);
-  assertEqualFloat(200, as5600.getOffset(), 0.05);
+  assertEqualFloat(200, as5600.getOffset(), 0.1);
 
   as5600.increaseOffset(30);
-  assertEqualFloat(230, as5600.getOffset(), 0.05);
+  assertEqualFloat(230, as5600.getOffset(), 0.1);
 
   as5600.setOffset(200);
-  assertEqualFloat(200, as5600.getOffset(), 0.05);
+  assertEqualFloat(200, as5600.getOffset(), 0.1);
 
   as5600.increaseOffset(-30);
-  assertEqualFloat(170, as5600.getOffset(), 0.05);
+  assertEqualFloat(170, as5600.getOffset(), 0.1);
 
   as5600.setOffset(200);
-  assertEqualFloat(200, as5600.getOffset(), 0.05);
+  assertEqualFloat(200, as5600.getOffset(), 0.1);
 
   as5600.increaseOffset(-300);
-  assertEqualFloat(260, as5600.getOffset(), 0.05);
+  assertEqualFloat(260, as5600.getOffset(), 0.1);
 }
 
 
