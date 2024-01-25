@@ -439,6 +439,40 @@ Please read datasheet for details.
 |  6-7  |       | not used      |                       |
 
 
+#### Error handling
+
+Since 0.5.2 the library has added **experimental** error handling.
+For now only lowest level I2C errors are checked for transmission errors.
+Error handling might be improved upon in the future.
+
+Note: The public functions do not act on error conditions.
+This might change in the future.
+So the user should check for error conditions.
+
+```cpp
+int e = lastError();
+if (e != AS5600_OK)
+{
+  //  handle error
+}
+```
+
+
+- **int lastError()** returns the last error code.
+After reading the error status is cleared to **AS5600_OK**.
+
+
+|  Error codes              |  value  |  notes    |
+|:--------------------------|:-------:|:----------|
+|  AS5600_OK                |     0   |  default  |
+|  AS5600_ERROR_I2C_READ_0  |  -100   |
+|  AS5600_ERROR_I2C_READ_1  |  -101   |
+|  AS5600_ERROR_I2C_READ_2  |  -102   |
+|  AS5600_ERROR_I2C_READ_3  |  -103   |
+|  AS5600_ERROR_I2C_WRITE_0 |  -200   |
+|  AS5600_ERROR_I2C_WRITE_1 |  -201   |
+
+
 ## Make configuration persistent. BURN
 
 #### Read burn count
@@ -613,6 +647,7 @@ This output could be used to connect multiple sensors to different analogue port
 
 **Warning**: If and how well this analog option works is not verified or tested.
 
+
 ----
 
 ## AS5600L class
@@ -697,9 +732,9 @@ priority is relative.
   - is there improvement possible.
 
 
+
 #### Could
 
-- add error handling
 - investigate PGO programming pin.
 - check for compatible devices
   - AS5200 ?
@@ -707,7 +742,13 @@ priority is relative.
   - basic performance per function
   - I2C improvements
   - software direction
-
+- implement extended error handling in public functions.
+  - will increase footprint !! how much?
+  - writeReg() only if readReg() is OK ==> prevent incorrect writes
+    - ```if (_error != 0) return false;```
+  - set AS5600_ERROR_PARAMETER  e.g. setZPosition()
+  - a derived class with extended error handling?
+  
 
 #### Wont (unless)
 
