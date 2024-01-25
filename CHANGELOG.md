@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.5.2] - 2024-01-25
 - add experimental error handling
+- add **int lastError()** so user can check the status of last I2C actions.
 - update examples
 - minor edits
 
