@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - update examples
 - minor edits
 
+----
 
 ## [0.5.1] - 2023-12-31
 - fix #51, add **increaseOffset(float degrees)**
