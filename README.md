@@ -118,6 +118,7 @@ See more in the sections Analog OUT and PWM OUT below.
 
 
 ##### Note: (From Zipdox2 - See issue #36)
+
 Some AS5600 modules seem to have a resistor between **PGO** and **GND**.
 This causes the AS5600 to disable the output (to use it for programming, see datasheet). 
 This resistor needs to be removed to use the **OUT** pin.
@@ -137,6 +138,8 @@ See **Make configuration persistent** below.
 
 ## I2C 
 
+The I2C address of the **AS5600** is always 0x36.
+
 #### Address
 
 |  sensor  |  address  |  changeable  |
@@ -148,6 +151,32 @@ To use more than one **AS5600** on one I2C bus, see Multiplexing below.
 
 The **AS5600L** supports the change of I2C address, optionally permanent.
 Check the **setAddress()** function for non-permanent change. 
+
+
+#### I2C multiplexing
+
+Sometimes you need to control more devices than possible with the default
+address range the device provides.
+This is possible with an I2C multiplexer e.g. TCA9548 which creates up 
+to eight channels (think of it as I2C subnets) which can use the complete 
+address range of the device. 
+
+Drawback of using a multiplexer is that it takes more administration in 
+your code e.g. which device is on which channel. 
+This will slow down the access, which must be taken into account when
+deciding which devices are on which channel.
+Also note that switching between channels will slow down other devices 
+too if they are behind the multiplexer.
+
+- https://github.com/RobTillaart/TCA9548
+
+Alternative could be the use of a AND port for the I2C clock line to prevent 
+the sensor from listening to signals on the I2C bus. 
+
+Finally the sensor has an analogue output **OUT**.
+This output could be used to connect multiple sensors to different analogue ports of the processor.
+
+**Warning**: If and how well this analog option works is not verified or tested.
 
 
 #### Performance
@@ -631,21 +660,6 @@ You need a sub-micro second hardware timer to measure the pulse width
 with enough precision to get the max resolution.
 
 When PWM OUT is selected **readAngle()** will still return valid values.
-
-
-## Multiplexing
-
-The I2C address of the **AS5600** is always 0x36.
-
-To use more than one **AS5600** on one I2C bus, one needs an I2C multiplexer, 
-e.g. https://github.com/RobTillaart/TCA9548.
-Alternative could be the use of a AND port for the I2C clock line to prevent 
-the sensor from listening to signals on the I2C bus. 
-
-Finally the sensor has an analogue output **OUT**.
-This output could be used to connect multiple sensors to different analogue ports of the processor.
-
-**Warning**: If and how well this analog option works is not verified or tested.
 
 
 ----
