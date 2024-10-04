@@ -182,7 +182,7 @@ unittest(test_software_direction)
 }
 
 
-unittest(test_offset_I)
+unittest(test_offset_1)
 {
   AS5600 as5600;
 
@@ -216,7 +216,7 @@ unittest(test_offset_I)
 }
 
 
-unittest(test_offset_II)
+unittest(test_offset_2)
 {
   AS5600 as5600;
 

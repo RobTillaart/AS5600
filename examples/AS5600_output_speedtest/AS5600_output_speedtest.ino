@@ -5,6 +5,8 @@
 //     URL: https://github.com/RobTillaart/AS5600
 //          https://forum.arduino.cc/t/questions-using-the-as5600-in-pwm-mode/1266957/12
 //
+//  Will not run on all boards,
+//
 //  Examples may use AS5600 or AS5600L devices.
 //  Check if your sensor matches the one used in the example.
 //  Optionally adjust the code.
