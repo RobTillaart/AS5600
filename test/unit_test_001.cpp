@@ -190,6 +190,12 @@ unittest(test_offset_I)
 
   as5600.begin();
 
+  as5600.setOffset(-0.0001);
+  assertEqualFloat(0, as5600.getOffset(), 0.05);
+  as5600.setOffset(360.00);
+  assertEqualFloat(0, as5600.getOffset(), 0.05);
+
+
   for (int of = 0; of < 360; of += 40)
   {
     as5600.setOffset(of);
