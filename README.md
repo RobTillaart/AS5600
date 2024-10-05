@@ -34,6 +34,16 @@ or fluctuating power supply.
 Please share your experiences.
 
 
+### 0.6.2 bug fixes.
+
+Version 0.6.2 fixes bugs that might affect your code.
+
+- fix **getCumulativePosition()** to make it direction aware.
+- fix negative values in **getRevolutions()**.
+- fix **setOffset()** to not set offset to 360 degrees.
+- fix #66, make I2C functions virtual.
+
+
 ### 0.5.0 Breaking change
 
 Version 0.5.0 introduced a breaking change.
@@ -729,7 +739,7 @@ priority is relative.
 
 #### Must
 
-- re-organize readme
+- re-organize readme.md
 - rename revolution functions
   - to what?
 

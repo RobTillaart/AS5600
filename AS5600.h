@@ -102,7 +102,8 @@ public:
   AS5600(TwoWire *wire = &Wire);
 
   bool     begin(uint8_t directionPin = AS5600_SW_DIRECTION_PIN);
-  bool     isConnected();
+  //  made virtual, see #66
+  virtual bool isConnected();
 
   //  address = fixed   0x36 for AS5600, 
   //          = default 0x40 for AS5600L
@@ -237,10 +238,11 @@ public:
 
 
 protected:
-  uint8_t  readReg(uint8_t reg);
-  uint16_t readReg2(uint8_t reg);
-  uint8_t  writeReg(uint8_t reg, uint8_t value);
-  uint8_t  writeReg2(uint8_t reg, uint16_t value);
+  //  made virtual, see #66
+  virtual uint8_t  readReg(uint8_t reg);
+  virtual uint16_t readReg2(uint8_t reg);
+  virtual uint8_t  writeReg(uint8_t reg, uint8_t value);
+  virtual uint8_t  writeReg2(uint8_t reg, uint16_t value);
 
   uint8_t  _address         = AS5600_DEFAULT_ADDRESS;
   uint8_t  _directionPin    = 255;
