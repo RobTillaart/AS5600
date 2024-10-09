@@ -6,7 +6,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.6.3] - 2024-10-04
-- fix #67, add update flag for speed and cumulative position
 - fix #69, **resetCumulativePosition()**
 - minor edits
 

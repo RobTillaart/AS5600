@@ -219,11 +219,11 @@ public:
   //  approximation of the angular speed in rotations per second.
   //  mode == 1: radians /second
   //  mode == 0: degrees /second  (default)
-  float    getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES, bool update = true);
+  float    getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES);
 
   //  EXPERIMENTAL CUMULATIVE POSITION
   //  reads sensor and updates cumulative position
-  int32_t  getCumulativePosition(bool update = true);
+  int32_t  getCumulativePosition();
   //  converts last position to whole revolutions.
   int32_t  getRevolutions();
   //  resets position only (not the i)

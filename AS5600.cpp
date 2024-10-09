@@ -426,14 +426,8 @@ bool AS5600::magnetTooWeak()
 //  }
 
 
-float AS5600::getAngularSpeed(uint8_t mode, bool update)
+float AS5600::getAngularSpeed(uint8_t mode)
 {
-  static float speed = 0;
-
-  if (update == false)
-  {
-    return speed;
-  }
   //  default behaviour
   uint32_t now     = micros();
   int      angle   = readAngle();
@@ -445,7 +439,7 @@ float AS5600::getAngularSpeed(uint8_t mode, bool update)
   //  => at least two measurements per rotation (preferred 4).
   if (deltaA >  2048)      deltaA -= 4096;
   else if (deltaA < -2048) deltaA += 4096;
-  speed = (deltaA * 1e6) / deltaT;
+  float speed = (deltaA * 1e6) / deltaT;
 
   //  remember last time & angle
   _lastMeasurement = now;
@@ -469,12 +463,8 @@ float AS5600::getAngularSpeed(uint8_t mode, bool update)
 //
 //  POSITION cumulative
 //
-int32_t AS5600::getCumulativePosition(bool update)
+int32_t AS5600::getCumulativePosition()
 {
-  if (update == false)
-  {
-    return _position;
-  }
   int16_t value = readAngle();
   if (_error != AS5600_OK)
   {
