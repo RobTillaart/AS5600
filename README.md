@@ -385,9 +385,16 @@ as.increaseOffset(-30);
 
 ### Angular Speed
 
-- **float getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES)** 
+- **float getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES, bool update = true)** 
 is an experimental function that returns 
 an approximation of the angular speed in rotations per second.
+
+If update is false, the function will use the last read value of **readAngle()**.
+This is also used by **getCumulativePosition()** and when used both these
+functions a substantial performance gain is made.
+See example **AS5600_position_speed.ino**.
+
+In case of a reading failure (when update == true), the function can return NAN.
 
 The function needs to be called at least **four** times per rotation
 or once per second to get a reasonably precision. 
@@ -433,8 +440,12 @@ The cumulative position (32 bits) consists of 3 parts
 
 Functions are:
 
-- **int32_t getCumulativePosition()** reads sensor and updates cumulative position.  
+- **int32_t getCumulativePosition(bool update = true)** reads sensor and updates cumulative position.  
 Updated in 0.6.2 to follow the setting of the **directionPin**.
+If update is false, the function will use the last read value of **readAngle()**.
+This is also used by **getCumulativePosition()** and when used both these
+functions a substantial performance gain is made.
+See example **AS5600_position_speed.ino**.
 - **int32_t getRevolutions()** converts last position to whole revolutions.
 Convenience function.
 Updated in 0.6.2 to return **zero** for the first negative revolution as this
