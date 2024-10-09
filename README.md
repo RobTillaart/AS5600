@@ -385,8 +385,11 @@ as.increaseOffset(-30);
 
 ### Angular Speed
 
-- **float getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES)** is an experimental function that returns 
+- **float getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES, bool update = true)** 
+is an experimental function that returns 
 an approximation of the angular speed in rotations per second.
+If the update flag is set to false, it returns the last calculated speed.
+
 The function needs to be called at least **four** times per rotation
 or once per second to get a reasonably precision. 
 
@@ -418,7 +421,7 @@ should be within 180° = half a rotation.
 Since 0.3.3 an experimental cumulative position can be requested from the library.
 The sensor does not provide interrupts to indicate a movement or revolution
 Therefore one has to poll the sensor at a frequency at least **three** times 
-per revolution with **getCumulativePosition()**
+per revolution with **getCumulativePosition(bool update = true)**
 
 The cumulative position (32 bits) consists of 3 parts
 
@@ -431,8 +434,9 @@ The cumulative position (32 bits) consists of 3 parts
 
 Functions are:
 
-- **int32_t getCumulativePosition()** reads sensor and updates cumulative position.  
+- **int32_t getCumulativePosition(bool update = true)** reads sensor and updates cumulative position.  
 Updated in 0.6.2 to follow the setting of the **directionPin**.
+If update == false, it returns the last calculated position.
 - **int32_t getRevolutions()** converts last position to whole revolutions.
 Convenience function.
 Updated in 0.6.2 to return **zero** for the first negative revolution as this
@@ -445,7 +449,7 @@ Returns last position (before reset).
 This includes the delta (rotation) since last call to **getCumulativePosition()**.
 Returns last position (before reset).
 
-As this code is experimental, names might change in the future (0.4.0)?
+As this code is experimental, names might change in the future.
 As the function are mostly about counting revolutions the current thoughts for new names are:
 
 ```cpp

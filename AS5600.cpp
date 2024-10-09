@@ -1,7 +1,7 @@
 //
 //    FILE: AS56000.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.6.2
+// VERSION: 0.6.3
 // PURPOSE: Arduino library for AS5600 magnetic rotation meter
 //    DATE: 2022-05-28
 //     URL: https://github.com/RobTillaart/AS5600
@@ -426,8 +426,15 @@ bool AS5600::magnetTooWeak()
 //  }
 
 
-float AS5600::getAngularSpeed(uint8_t mode)
+float AS5600::getAngularSpeed(uint8_t mode, bool update)
 {
+  static float speed = 0;
+
+  if (update == false)
+  {
+    return speed;
+  }
+  //  default behaviour
   uint32_t now     = micros();
   int      angle   = readAngle();
   uint32_t deltaT  = now - _lastMeasurement;
@@ -436,9 +443,9 @@ float AS5600::getAngularSpeed(uint8_t mode)
   //  assumption is that there is no more than 180° rotation
   //  between two consecutive measurements.
   //  => at least two measurements per rotation (preferred 4).
-  if (deltaA >  2048) deltaA -= 4096;
-  if (deltaA < -2048) deltaA += 4096;
-  float    speed   = (deltaA * 1e6) / deltaT;
+  if (deltaA >  2048)      deltaA -= 4096;
+  else if (deltaA < -2048) deltaA += 4096;
+  speed = (deltaA * 1e6) / deltaT;
 
   //  remember last time & angle
   _lastMeasurement = now;
@@ -462,10 +469,17 @@ float AS5600::getAngularSpeed(uint8_t mode)
 //
 //  POSITION cumulative
 //
-int32_t AS5600::getCumulativePosition()
+int32_t AS5600::getCumulativePosition(bool update)
 {
+  if (update == false)
+  {
+    return _position;
+  }
   int16_t value = readAngle();
-  if (_error != AS5600_OK) return _position;
+  if (_error != AS5600_OK)
+  {
+    return _position;
+  }
 
   //  whole rotation CW?
   //  less than half a circle
@@ -479,7 +493,10 @@ int32_t AS5600::getCumulativePosition()
   {
     _position = _position - 4096 - _lastPosition + value;
   }
-  else _position = _position - _lastPosition + value;
+  else
+  {
+    _position = _position - _lastPosition + value;
+  }
   _lastPosition = value;
 
   return _position;
@@ -504,7 +521,7 @@ int32_t AS5600::resetPosition(int32_t position)
 
 int32_t AS5600::resetCumulativePosition(int32_t position)
 {
-  _lastPosition = readReg2(AS5600_RAW_ANGLE) & 0x0FFF;
+  _lastPosition = readAngle();
   int32_t old = _position;
   _position = position;
   return old;
