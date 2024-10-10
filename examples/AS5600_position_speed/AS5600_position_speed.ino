@@ -37,25 +37,42 @@ void setup()
   Serial.print("Connect: ");
   Serial.println(b);
 
-  delay(1000);
+  for (uint32_t speed = 100000; speed <= 800000;  speed += 100000)
+  {
+    Wire.setClock(speed);
+    Serial.println(speed);
+    delay(100);
 
-  start = micros();
-  as5600.getCumulativePosition();
-  as5600.getAngularSpeed();
-  stop = micros();
-  Serial.print("update true: \t");
-  Serial.println(stop - start);
-  delay(100);
+    start = micros();
+    as5600.getCumulativePosition();
+    as5600.getAngularSpeed();
+    stop = micros();
+    Serial.print("update true: \t");
+    Serial.println(stop - start);
+    delay(100);
 
-  start = micros();
-  as5600.readAngle();
-  as5600.getCumulativePosition(false);
-  as5600.getAngularSpeed(AS5600_MODE_DEGREES, false);
-  stop = micros();
-  Serial.print("update false: \t");
-  Serial.println(stop - start);
-  Serial.println();
-  delay(100);
+    start = micros();
+    as5600.readAngle();
+    as5600.getCumulativePosition(false);
+    as5600.getAngularSpeed(AS5600_MODE_DEGREES, false);
+    stop = micros();
+    Serial.print("update false: \t");
+    Serial.println(stop - start);
+    Serial.println();
+    delay(100);
+  }
+
+  /*
+     about ~1% slower on AVR @100K
+    start = micros();
+    as5600.getCumulativePosition(true);
+    as5600.getAngularSpeed(AS5600_MODE_DEGREES, false);
+    stop = micros();
+    Serial.print("update false: \t");
+    Serial.println(stop - start);
+    Serial.println();
+    delay(100);
+  */
 
   delay(2000);
 }

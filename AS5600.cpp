@@ -329,6 +329,7 @@ uint16_t AS5600::readAngle()
   if ((_directionPin == AS5600_SW_DIRECTION_PIN) &&
       (_direction == AS5600_COUNTERCLOCK_WISE))
   {
+    //  mask needed for value == 0.
     value = (4096 - value) & 0x0FFF;
   }
   _lastReadAngle = value;

@@ -467,6 +467,35 @@ int32_t getRevolutions();
 int32_t resetRevolutions();   //  replaces resetPosition();
 ```
 
+### Angular Speed + Cumulative position optimization.
+
+Since 0.6.4 it is possible to optimize the performance of getting both.
+- **getCumulativePosition()**
+- **getAngularSpeed()** 
+
+As both use to read the Angle, one can reuse this by setting the update flag to false.
+One must call **readAngle()** right before both of them
+In code:
+
+```cpp
+    ...
+    alpha = as5600.readAngle();
+    pos   = as5600.getCumulativePosition(false);
+    speed = as5600.getAngularSpeed(AS5600_MODE_DEGREES, false);
+
+    //  process the values...
+```
+
+Please note that the **mode** parameter for getAngularSpeed() becomes mandatory.
+
+The call to **readAngle()** caches the angle read and uses it in both functions.
+The savings are substantial, see **AS5600_position_speed.ino**
+
+The advantage is that both speed and pos are based upon the same reading.
+A disadvantage is that the latter of the two calls is not max up to date.
+
+Use with care.
+
 
 ### Status registers
 
