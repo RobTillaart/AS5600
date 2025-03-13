@@ -17,8 +17,8 @@
 #include "AS5600.h"
 
 //  Uncomment the line according to your sensor type
-AS5600L as5600_0(&Wire);
-AS5600L as5600_1(&Wire1);
+AS5600L as5600_0(AS5600L_DEFAULT_ADDRESS, &Wire);
+AS5600L as5600_1(AS5600L_DEFAULT_ADDRESS, &Wire1);
 // AS5600 as5600_0(&Wire);
 // AS5600 as5600_1(&Wire1);
 
