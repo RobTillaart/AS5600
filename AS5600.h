@@ -21,8 +21,11 @@ const uint8_t AS5600L_DEFAULT_ADDRESS   = 0x40;
 const uint8_t AS5600_SW_DIRECTION_PIN   = 255;
 
 //  setDirection
-const uint8_t AS5600_CLOCK_WISE         = 0;  //  LOW
-const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
+typedef enum{
+  AS5600_CLOCK_WISE = 0,
+  AS5600_COUNTERCLOCK_WISE = 1
+} AS5600_DIRECTION_e;
+
 
 //  0.087890625;
 const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4096;
@@ -101,7 +104,10 @@ class AS5600
 public:
   AS5600(TwoWire *wire = &Wire);
 
-  bool     begin(uint8_t directionPin = AS5600_SW_DIRECTION_PIN);
+  bool     begin(uint8_t directionPin);
+  
+  bool     begin();  // If no direction pin. (need to pull up (CCW)/down(CW) dir pin in hardware). Default assumed direction is LOW/CW
+
   //  made virtual, see #66
   virtual bool isConnected();
 
@@ -116,8 +122,8 @@ public:
   //  0         = AS5600_CLOCK_WISE
   //  1         = AS5600_COUNTERCLOCK_WISE
   //  all other = AS5600_COUNTERCLOCK_WISE
-  void     setDirection(uint8_t direction = AS5600_CLOCK_WISE);
-  uint8_t  getDirection();
+  void     setDirection(AS5600_DIRECTION_e direction = AS5600_CLOCK_WISE);
+  AS5600_DIRECTION_e  getDirection();
 
   uint8_t  getZMCO();
 
@@ -245,10 +251,10 @@ protected:
   virtual uint8_t  writeReg(uint8_t reg, uint8_t value);
   virtual uint8_t  writeReg2(uint8_t reg, uint16_t value);
 
-  uint8_t  _address         = AS5600_DEFAULT_ADDRESS;
-  uint8_t  _directionPin    = 255;
-  uint8_t  _direction       = AS5600_CLOCK_WISE;
-  int      _error           = AS5600_OK;
+  uint8_t              _address        = AS5600_DEFAULT_ADDRESS;
+  uint8_t             _directionPin    = 255;
+  AS5600_DIRECTION_e  _direction       = AS5600_CLOCK_WISE;
+  int                 _error           = AS5600_OK;
 
   TwoWire*  _wire;
 
