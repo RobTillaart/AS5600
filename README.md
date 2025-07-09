@@ -809,6 +809,10 @@ priority is relative.
   - 1 minute (need HW)
 - check Timing Characteristics (datasheet)
   - is there improvement possible.
+- investigate **GEAR** idea - See PR 79
+  - wrapper class seems be ideal 
+  - GEAR myGear(AS5600 as); ->  myGear.setRatio(5); and what more?
+  - embed into main class? footprint / conditional extra math.
 
 #### Could
 
