@@ -303,7 +303,7 @@ Returns false if parameter is out of range.
 - **uint16_t getConfigure()** returns the current configuration register a bit mask.
 
 
-|  Bit    |  short  | Description     |  Values                                                |
+|  bit    |  short  |  description    |  values                                                |
 |:-------:|:--------|:----------------|:-------------------------------------------------------|
 |  0-1    |  PM     |  Power mode     |  00 = NOM,  01 = LPM1,   10 = LPM2,   11 = LPM3        |
 |  2-3    |  HYST   |  Hysteresis     |  00 = OFF,  01 = 1 LSB,  10 = 2 LSB,  11 = 3 LSB       |
@@ -516,13 +516,13 @@ Scale is unclear, can be used as relative scale.
 
 Please read datasheet for details.
 
-|  Bit  | short | Description   | Values                |
-|:-----:|:------|:-------------:|:----------------------|
-|  0-2  |       | not used      |                       |
-|  3    |  MH   | overflow      | 1 = magnet too strong |
-|  4    |  ML   | underflow     | 1 = magnet too weak   |
-|  5    |  MD   | magnet detect | 1 = magnet detected   |
-|  6-7  |       | not used      |                       |
+|  bit  | short |  description    |  values                 |
+|:-----:|:------|:---------------:|:------------------------|
+|  0-2  |       |  not used       |                         |
+|  3    |  MH   |  overflow       |  1 = magnet too strong  |
+|  4    |  ML   |  underflow      |  1 = magnet too weak    |
+|  5    |  MD   |  magnet detect  |  1 = magnet detected    |
+|  6-7  |       |  not used       |                         |
 
 
 ### Error handling
@@ -548,15 +548,15 @@ if (e != AS5600_OK)
 After reading the error status is cleared to **AS5600_OK**.
 
 
-|  Error codes              |  value  |  notes    |
-|:--------------------------|:-------:|:----------|
-|  AS5600_OK                |     0   |  default  |
-|  AS5600_ERROR_I2C_READ_0  |  -100   |
-|  AS5600_ERROR_I2C_READ_1  |  -101   |
-|  AS5600_ERROR_I2C_READ_2  |  -102   |
-|  AS5600_ERROR_I2C_READ_3  |  -103   |
-|  AS5600_ERROR_I2C_WRITE_0 |  -200   |
-|  AS5600_ERROR_I2C_WRITE_1 |  -201   |
+|  error codes               |  value  |  notes    |
+|:---------------------------|:-------:|:----------|
+|  AS5600_OK                 |     0   |  default  |
+|  AS5600_ERROR_I2C_READ_0   |  -100   |
+|  AS5600_ERROR_I2C_READ_1   |  -101   |
+|  AS5600_ERROR_I2C_READ_2   |  -102   |
+|  AS5600_ERROR_I2C_READ_3   |  -103   |
+|  AS5600_ERROR_I2C_WRITE_0  |  -200   |
+|  AS5600_ERROR_I2C_WRITE_1  |  -201   |
 
 
 ## Make configuration persistent. BURN
@@ -639,12 +639,12 @@ The OUT pin can be configured with the function:
 When the analog OUT mode is set the OUT pin provides a voltage
 which is linear with the angle.
 
-| VDD |  mode  | percentage | output    |  1° in V   |
-|:---:|:------:|:----------:|:---------:|:----------:|
-| 5V0 |   0    |  0 - 100%  | 0.0 - 5.0 | 0.01388889 |
-| 5V0 |   1    |  10 - 90%  | 0.5 - 4.5 | 0.01111111 |
-| 3V3 |   0    |  0 - 100%  | 0.0 - 3.3 | 0.00916667 |
-| 3V3 |   1    |  10 - 90%  | 0.3 - 3.0 | 0.00750000 |
+|  VDD  |  mode  |  percentage  |  output     |  1° in V     |
+|:-----:|:------:|:------------:|:-----------:|:------------:|
+|  5V0  |   0    |   0 - 100%   |  0.0 - 5.0  |  0.01388889  |
+|  5V0  |   1    |   10 - 90%   |  0.5 - 4.5  |  0.01111111  |
+|  3V3  |   0    |   0 - 100%   |  0.0 - 3.3  |  0.00916667  |
+|  3V3  |   1    |   10 - 90%   |  0.3 - 3.0  |  0.00750000  |
 
 To measure these angles a 10 bit ADC or higher is needed.
 
@@ -670,7 +670,7 @@ with the angle. However they PWM has a lead in (HIGH) and a lead out (LOW).
 
 The pulse width is 4351 units, 128 high, 4095 angle, 128 low.
 
-|  Angle  |   HIGH  |  LOW   |  HIGH %  |  LOW %   |  Notes  |
+|  angle  |   HIGH  |  LOW   |  HIGH %  |  LOW %   |  notes  |
 |:-------:|:-------:|:------:|:--------:|:--------:|:--------|
 |     0   |    128  |  4223  |   2,94%  |  97,06%  |
 |    10   |    242  |  4109  |   5,56%  |  94,44%  |
@@ -682,7 +682,7 @@ The pulse width is 4351 units, 128 high, 4095 angle, 128 low.
 |   225   |   2687  |  1664  |  61,76%  |  38,24%  |
 |   270   |   3199  |  1152  |  73,53%  |  26,47%  |
 |   315   |   3711  |   640  |  85,29%  |  14,71%  |
-|   360   |   4223  |   128  |  97,06%  |   2,94%  | in fact 359.9 something as 360 == 0
+|   360   |   4223  |   128  |  97,06%  |   2,94%  |  in fact 359.9 something as 360 == 0
 
 
 ### Formula
@@ -708,12 +708,12 @@ float angle     = (dutyCycle - 0.0294) * (359.9 / (0.9706 - 0.0294));
 The AS5600 allows one to set the PWM base frequency (~5%)
 - **bool setPWMFrequency(uint8_t pwmFreq)**
 
-| mode | pwmFreq | step in us | 1° in time |
-|:----:|:-------:|:----------:|:----------:|
-|   0  |  115 Hz |    2.123   |    24.15   |
-|   1  |  230 Hz |    1.062   |    12.77   |
-|   2  |  460 Hz |    0.531   |     6.39   |
-|   3  |  920 Hz |    0.216   |     3.20   |
+|  mode  |  pwmFreq  |  step in us  |  1° in time  |
+|:------:|:---------:|:------------:|:------------:|
+|   0    |  115 Hz   |     2.123    |    24.15     |
+|   1    |  230 Hz   |     1.062    |    12.77     |
+|   2    |  460 Hz   |     0.531    |     6.39     |
+|   3    |  920 Hz   |     0.216    |     3.20     |
 
 Note that at the higher frequencies the step size becomes smaller
 and smaller and it becomes harder to measure.

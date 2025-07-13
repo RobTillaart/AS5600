@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add **AS5600_pwm_test2.ino** optimized PWM version
 - update comments
 - update readme.md
+- remove ESP8266 from build (as build takes long)
 - minor edits
 
 ## [0.6.5] - 2025-03-13
