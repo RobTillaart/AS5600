@@ -262,9 +262,10 @@ const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4096;
 const float   AS5600_RAW_TO_RPM         = 1.0 / 4096 / 60;
 
 //  getAngularSpeed
-const uint8_t AS5600_MODE_DEGREES       = 0;
+const uint8_t AS5600_MODE_DEGREES       = 0;  //  default
 const uint8_t AS5600_MODE_RADIANS       = 1;
 const uint8_t AS5600_MODE_RPM           = 2;
+const uint8_t AS5600_MODE_RPS           = 3;
 ```
 
 See AS5600.h file (and datasheet) for all constants.
@@ -362,7 +363,7 @@ In a way one is trading precision for stability.
 - **void resetPOR()** reads back the values from non-volatile RAM.
 Should work as a Power On Reset, undo the runtime changes in the configuration
 and other registers stored in non-volatile RAM.
-  - possibly affects MANG, ZPOS, MPOS, CONFIG, I2CADDR (as5600L only)
+  - possibly affects MANG, ZPOS, MPOS, CONFIG, I2CADDR (AS5600L only)
 
 
 ### Read Angle
@@ -417,7 +418,7 @@ as.increaseOffset(-30);
 
 - **float getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES, bool update = true)**
 is a function that returns
-an approximation of the angular speed in rotations per second.
+an approximation of the angular speed in the defined units. See table below.
 
 If update is false, the function will use the last read value of **readAngle()**.
 This is also used by **getCumulativePosition()** and when used both these

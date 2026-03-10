@@ -34,7 +34,7 @@ const float   AS5600_RAW_TO_RPM         = 60.0 / 4096;
 const float   AS5600_RAW_TO_RPS         = 1.0 / 4096;
 
 //  getAngularSpeed
-const uint8_t AS5600_MODE_DEGREES       = 0;
+const uint8_t AS5600_MODE_DEGREES       = 0;  //  default
 const uint8_t AS5600_MODE_RADIANS       = 1;
 const uint8_t AS5600_MODE_RPM           = 2;
 const uint8_t AS5600_MODE_RPS           = 3;
@@ -233,10 +233,11 @@ public:
 
 
   //  approximation of the angular speed
-  //  mode == 3 AS5600_MODE_RPS:     rounds per second.
-  //  mode == 2 AS5600_MODE_RPM:     rounds per minute.
+  //  mode == 3 AS5600_MODE_RPS:     rounds per second
+  //  mode == 2 AS5600_MODE_RPM:     rounds per minute
   //  mode == 1 AS5600_MODE_RADIANS: radians /second
   //  mode == 0 AS5600_MODE_DEGREES: degrees /second  (default)
+  //  update = call readAngle() or use last value (see readme.md)
   float    getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES,
                            bool update = true);
 
