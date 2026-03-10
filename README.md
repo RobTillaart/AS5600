@@ -563,38 +563,51 @@ After reading the error status is cleared to **AS5600_OK**.
 
 ### Read burn count
 
-- **uint8_t getZMCO()** reads back how many times the ZPOS and MPOS
-registers are written to permanent memory.
-You can only burn a new Angle 3 times to the AS5600, and only 2 times for the AS5600L.
+- **uint8_t getZMCO()** reads back how many times the **ZPOS** and **MPOS**
+registers are written to persistent memory.
+You can only burn a new Angle **three** times to the AS5600, and only 2 times 
+for the AS5600L.
 This function is safe as it is read-only.
 
 
 ### BURN function
 
-The burn functions are used to make ZPOS, MPOS and MANG settings persistent.
-These burn functions are permanent, therefore they are commented in the library.
-Please read datasheet twice (page 21-24), before uncomment these functions.
-
-Note you need to add a delay of 1 ms after writing
 **USE AT OWN RISK**
 
-Please read datasheet **twice** as these changes are not reversible.
+The burn functions are used to make ZPOS, MPOS and MANG settings persistent.
+These burn functions are permanent, therefore they are commented in the library.
+Please read datasheet **twice** (page 21-24), before uncomment these functions,
+as making these values persistent is only (partly) reversible once.
 
 The risk is that you make your AS5600 / AS5600L **USELESS**.
+
+Note you need to add a delay of 1 ms after writing.
 
 **USE AT OWN RISK**
 
 These are the two "unsafe" functions:
-- **void burnAngle()** writes the **ZPOS** and **MPOS** registers to permanent memory.
-You can only burn a new Angle maximum **THREE** times to the AS5600
+
+- **void burnAngle()** writes the **ZPOS** and **MPOS** registers to persistent memory.
+You can only burn a new Angle maximum **three** times to the AS5600
 and **TWO** times for the AS5600L.
-- **void burnSetting()** writes the **MANG** register to permanent memory.
+use **uint8_t getZMCO()** to see how often it has been persistently written.
+- **void burnSetting()** writes the **MANG** register to persistent memory.
 You can write this only **ONE** time to the AS5600.
 Note that MANG can be written only if ZPOS and MPOS have **never** been
-permanently written (ZMCO == 00).
+permanently written (getZMCO() returns 0).
 
-Some discussion about burning see issue #38
+So one has to call **burnSetting()** first, and then ZPOS and MPOS can be 
+"calibrated" thereafter with **burnAngle()**.
+
+
+Discussion about burning see issue #38 + #81
 (I have no hands on experience with this functions)
+
+|  function     |  saves                | times |  notes  |
+|:--------------|:---------------------:|:-----:|:-------:|
+|  burnAngle    |  ZPOS MPOS            |  3x   |  
+|  burnSetting  |  MANG CONFIG I2CADDR  |  1x   |  I2CADDR = AS5600L only
+
 
 **USE AT OWN RISK**
 
@@ -732,9 +745,13 @@ As the I2C address can be changed in the AS5600L, the address is a parameter of 
 This is a difference with the AS5600 constructor.
 
 
-### Setting I2C address
+### Set I2C address
 
 - **bool setAddress(uint8_t address)** Returns false if the I2C address is not in valid range (8-119).
+
+The **setAddress()** does not set the I2C address permanently.
+One need to call the (commented) **burnSetting()** to make this 
+address persistent.
 
 
 ### Setting I2C UPDT

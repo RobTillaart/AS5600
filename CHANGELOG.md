@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.6.7] - 2026-03-06
+- fix #81, persistent I2C address.
+- update readme.md
+- update GitHub actions
+- minor edits
+
 ## [0.6.6] - 2025-07-08
 - update **AS5600_burn_zpos.ino** (#38, kudos to eriknz)
 - add **AS5600_detect_type.ino** for debugging purpose
