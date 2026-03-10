@@ -72,7 +72,7 @@ void loop()
     Serial.print("STATUS:\t ");
     Serial.println(device.readStatus(), HEX);
     Serial.print("CONFIG:\t ");
-    Serial.println(device.getConfigure(), HEX);
+    Serial.println(device.getConfiguration(), HEX);
     Serial.print("  GAIN:\t ");
     Serial.println(device.readAGC(), HEX);
     Serial.print("MAGNET:\t ");
@@ -96,7 +96,7 @@ void loop()
     Serial.print("STATUS:\t ");
     Serial.println(device.readStatus(), HEX);
     Serial.print("CONFIG:\t ");
-    Serial.println(device.getConfigure(), HEX);
+    Serial.println(device.getConfiguration(), HEX);
     Serial.print("  GAIN:\t ");
     Serial.println(device.readAGC(), HEX);
     Serial.print("MAGNET:\t ");

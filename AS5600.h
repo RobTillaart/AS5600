@@ -140,8 +140,14 @@ public:
   //  access the whole configuration register
   //  check datasheet for bit fields
   //  returns false if parameter out of range
-  bool     setConfigure(uint16_t value);
-  uint16_t getConfigure();
+  bool     setConfiguration(uint16_t value);
+  uint16_t getConfiguration();
+
+  //  keep backwards compatible
+  [[deprecated("Use setConfiguration()")]]
+  bool     setConfigure(uint16_t value) { return setConfiguration(value); };
+  [[deprecated("Use getConfiguration()")]]
+  uint16_t getConfigure() { return getConfiguration(); };
 
   //  access details of the configuration register
   //  0 = Normal
@@ -184,6 +190,9 @@ public:
   //  returns false if parameter out of range
   bool     setWatchDog(uint8_t mask);
   uint8_t  getWatchDog();
+
+  //  read configuration from persistent memory
+  void     resetPOR();
 
 
   //  READ OUTPUT REGISTERS

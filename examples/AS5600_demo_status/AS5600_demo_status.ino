@@ -39,7 +39,7 @@ void loop()
   Serial.print("STATUS:\t ");
   Serial.println(as5600.readStatus(), HEX);
   Serial.print("CONFIG:\t ");
-  Serial.println(as5600.getConfigure(), HEX);
+  Serial.println(as5600.getConfiguration(), HEX);
   Serial.print("  GAIN:\t ");
   Serial.println(as5600.readAGC(), HEX);
   Serial.print("MAGNET:\t ");

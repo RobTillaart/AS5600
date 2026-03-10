@@ -22,7 +22,7 @@ Multiple angle measurements allows one to calculate or estimate the RPM.
 
 The AS5600 and AS5600L sensors are pin compatible (always check your model's datasheet).
 
-**Warning: experimental**
+**Warning: Experimental**
 
 The sensor can measure a full rotation in 4096 steps.
 The precision of the position is therefore limited to approx 0.1°.
@@ -297,10 +297,10 @@ See datasheet **Angle Programming**
 
 Please read datasheet for details.
 
-- **bool setConfigure(uint16_t value)** value == 0..0x3FFF
+- **bool setConfiguration(uint16_t value)** value == 0..0x3FFF
 Access the register as bit mask.
 Returns false if parameter is out of range.
-- **uint16_t getConfigure()** returns the current configuration register a bit mask.
+- **uint16_t getConfiguration()** returns the current configuration register a bit mask.
 
 
 |  bit    |  short  |  description    |  values                                                |
@@ -335,6 +335,14 @@ In a way one is trading precision for stability.
 - **uint8_t getFastFilter()**
 - **bool setWatchDog(uint8_t mask)**
 - **uint8_t getWatchDog()**
+
+
+**resetPOR() is experimental** to be tested.
+
+- **void resetPOR()** read back the values from non-volatile RAM.
+Should work as a Power On Reset, undo the runtime changes in the configuration
+and other registers stored in non-volatile RAM.
+  - MANG, ZPOS, MPOS, CONFIG, I2CADDR (as5600L only)
 
 
 ### Read Angle
@@ -388,7 +396,7 @@ as.increaseOffset(-30);
 ### Angular Speed
 
 - **float getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES, bool update = true)**
-is an experimental function that returns
+is a function that returns
 an approximation of the angular speed in rotations per second.
 
 If update is false, the function will use the last read value of **readAngle()**.
@@ -424,9 +432,9 @@ with a short interval. The only limitation then is that both measurements
 should be within 180° = half a rotation.
 
 
-### Cumulative position (experimental)
+### Cumulative position
 
-Since 0.3.3 an experimental cumulative position can be requested from the library.
+Since 0.3.3 a cumulative position can be requested from the library.
 The sensor does not provide interrupts to indicate a movement or revolution
 Therefore one has to poll the sensor at a frequency at least **three** times
 per revolution with **getCumulativePosition()**
@@ -460,7 +468,7 @@ Returns last position (before reset).
 This includes the delta (rotation) since last call to **getCumulativePosition()**.
 Returns last position (before reset).
 
-As this code is experimental, names might change in the future.
+This code is work in progress, so names might change in the future.
 As the function are mostly about counting revolutions the current thoughts for new names are:
 
 ```cpp
@@ -527,7 +535,7 @@ Please read datasheet for details.
 
 ### Error handling
 
-Since 0.5.2 the library has added **experimental** error handling.
+Since 0.5.2 the library has added some error handling.
 For now only lowest level I2C errors are checked for transmission errors.
 Error handling might be improved upon in the future.
 
@@ -613,8 +621,6 @@ Discussion about burning see issue #38 + #81
 
 
 ## Software Direction Control
-
-Experimental 0.2.0
 
 Normally one controls the direction of the sensor by connecting the DIR pin
 to one of the available IO pins of the processor.
@@ -749,8 +755,8 @@ This is a difference with the AS5600 constructor.
 
 - **bool setAddress(uint8_t address)** Returns false if the I2C address is not in valid range (8-119).
 
-The **setAddress()** does not set the I2C address permanently.
-One need to call the (commented) **burnSetting()** to make this 
+The **setAddress()** does not set the I2C address persistently (over reboots).
+One need to call the (commented) **burnSetting()** to make the new I2C 
 address persistent.
 
 
@@ -803,13 +809,18 @@ priority is relative.
 
 #### Must
 
-- re-organize readme.md
-- rename revolution functions
-  - to what?
+- improve documentation
+  - reorganize readme.md 
+  - reorganize future list
+- rename functions
+  - bool setConfiguration(uint16_t value);  // remove setConfigure() 0.7.0
+  - uint16_t getConfiguration();            // remove getConfigure() 0.7.0
+  - revolution functions (to what?)
 
 #### Should
 
-- Implement extended error handling in public functions.
+- remove experimental sections/ keywords.
+- implement extended error handling in public functions.
   - will increase footprint !! how much?
   - **call writeReg() only if readReg() is OK** ==> prevent incorrect writes
     - ```if (_error != 0) return false;```
@@ -827,7 +838,8 @@ priority is relative.
 - check Timing Characteristics (datasheet)
   - is there improvement possible.
 - investigate **GEAR** idea - See PR 79
-  - wrapper class seems be ideal 
+  - wrapper class seems be ideal
+  - dependency injection
   - GEAR myGear(AS5600 as); ->  myGear.setRatio(5); and what more?
   - embed into main class? footprint / conditional extra math.
 
