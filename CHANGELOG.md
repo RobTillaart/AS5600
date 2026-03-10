@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.6.7] - 2026-03-06
-- fix #81, persistent I2C address.
+- fix #81, persistent I2C address (kudos to vslash)
 - add **void resetPOR()** read back from non volatile RAM.
 - add **setConfiguration()** // replaces setConfigure in 0.7.0
 - add **getConfiguration()** // idem
