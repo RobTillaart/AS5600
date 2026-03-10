@@ -24,8 +24,8 @@ getMPosition	KEYWORD2
 setMaxAngle	KEYWORD2
 getMaxAngle	KEYWORD2
 
-setConfigure	KEYWORD2
-getConfigure	KEYWORD2
+setConfiguration	KEYWORD2
+getConfiguration	KEYWORD2
 
 setPowerMode	KEYWORD2
 getPowerMode	KEYWORD2
