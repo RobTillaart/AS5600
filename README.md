@@ -55,32 +55,39 @@ before calling **AS5600.begin()**.
 
 ### Related libraries
 
-- https://github.com/RobTillaart/Angle
-- https://github.com/RobTillaart/AngleConvertor
-- https://github.com/RobTillaart/AverageAngle
-- https://github.com/RobTillaart/runningAngle
+- https://github.com/RobTillaart/Angle - basic math for Angles in degrees, minute, seconds
+- https://github.com/RobTillaart/AngleConvertor - converting angles (degrees/radians) to less known
+- https://github.com/RobTillaart/AverageAngle - calculate correctly the average of multiple angles
+- https://github.com/RobTillaart/runningAngle - average angles by means of low pass filtering
+- https://github.com/RobTillaart/AS5600 - this library
+- https://github.com/RobTillaart/printHelpers - scientific format et al.
+
+### Special char
+
+ALT-0176 = degree symbol °
 
 
 ## Hardware connection
 
-The I2C address of the **AS5600** is always 0x36.
+The I2C address of the **AS5600** is always 0x36 and cannot be changed.
 
-The sensor should connect the I2C lines SDA and SCL and the
+The sensor must connect the I2C lines SDA and SCL and the
 VCC and GND to communicate with the processor.
 Do not forget to add the pull up resistors to improve the I2C signals.
 
-The AS5600 datasheet states it supports Fast-Mode == 400 KHz
-and Fast-Mode-Plus == 1000 KHz.
+The AS5600 datasheet states it supports Fast-Mode == 400 kHz
+and Fast-Mode-Plus == 1000 kHz.
+The latter is confirmed with an AS5600L, see the next section.
 
 
 ### Pull ups
 
-I2C performance tests with an AS5600L with an UNO failed at 400 KHz.
+I2C performance tests with an AS5600L with an UNO R3 failed at 400 kHz.
 After investigation it became clear that pull ups are mandatory.
-The UNO expects 5 Volt I2C signals from the AS5600.
+The UNO R3 expects 5 Volt I2C signals from the AS5600.
 However the device only provides 3V3 pulses on the bus.
 So the signal was not stable fast enough (not "square enough").
-After applying pull ups the AS5600L worked up to 1000 KHz.
+After applying pull ups the AS5600L worked up to 1000 kHz.
 
 
 ### DIR pin
@@ -154,7 +161,7 @@ The I2C address of the **AS5600** is always 0x36.
 |  sensor  |  address  |  changeable  |
 |:--------:|:---------:|:-------------|
 |  AS5600  |    0x36   |  NO          |
-|  AS5600L |    0x40   |  YES, check setAddress()  |
+|  AS5600L |    0x40   |  ONCE, see setAddress()  |
 
 To use more than one **AS5600** on one I2C bus, see Multiplexing below.
 
@@ -182,22 +189,35 @@ too if they are behind the multiplexer.
 Alternative could be the use of a AND port for the I2C clock line to prevent
 the sensor from listening to signals on the I2C bus.
 
-Finally the sensor has an analogue output **OUT**.
-This output could be used to connect multiple sensors to different analogue ports of the processor.
+Furthermore the sensor has an analogue output **OUT**.
+This output could be used to connect multiple sensors to different analogue 
+ports of the processor.
 
 **Warning**: If and how well this analog option works is not verified or tested.
 
 
+#### AS5600L only
+
+An approach might include switching on the AS5600L sensors one by one, 
+and give them a new address during setup(). This would give every device
+an unique address, however if a sensor resets (e.g. power) one must go
+through this process again to prevent address conflicts.
+
+Finally one could (AS5600L only) change the I2C_address by burning a new 
+address to the persistent memory. Be aware this can only be done once per 
+sensor so use with care. See below.
+
+
 ### Performance
 
-|     board     |  sensor   |  results         |  notes  |
-|:-------------:|:---------:|:-----------------|:--------|
-|  Arduino UNO  |  AS5600   |  up to 900 KHz.  |  https://github.com/RobTillaart/AS5600/issues/22
-|  Arduino UNO  |  AS5600L  |  up to 300 KHz.  |
-|  ESP32        |  AS5600   |  no data         |
-|  ESP32        |  AS5600L  |  up to 800 KHz   |
+|     board        |  sensor   |  results         |  notes  |
+|:----------------:|:---------:|:-----------------|:--------|
+|  Arduino UNO R3  |  AS5600   |  up to 900 kHz.  |  https://github.com/RobTillaart/AS5600/issues/22
+|  Arduino UNO R3  |  AS5600L  |  up to 300 kHz.  |  with pull ups 1000 kHz.
+|  ESP32           |  AS5600   |  no data         |
+|  ESP32           |  AS5600L  |  up to 800 kHz   |
 
-No other boards tested yet.
+No other boards tested yet, feedback welcome.
 
 
 ### ESP32 and I2C
@@ -266,9 +286,8 @@ See below.
 
 ### Direction
 
-To define in which way the sensor counts up.
-
-- **void setDirection(uint8_t direction = AS5600_CLOCK_WISE)** idem.
+- **void setDirection(uint8_t direction = AS5600_CLOCK_WISE)** 
+define in which way the sensor counts up.
 - **uint8_t getDirection()** returns AS5600_CLOCK_WISE (0) or
 AS5600_COUNTERCLOCK_WISE (1).
 
@@ -279,15 +298,15 @@ See Software Direction Control below for more information.
 
 Please read the datasheet (including. BURN section) for details.
 
-- **bool setZPosition(uint16_t value)** set start position for limited range.
+- **bool setZPosition(uint16_t value)** set start position for limited range a.k.a. ZPOS.
 Value = 0..4095. Returns false if parameter is out of range.
 One need to wait at least 1 ms after writing ZPOS (see BURN section datasheet).
 - **uint16_t getZPosition()** get current start position.
-- **bool setMPosition(uint16_t value)** set stop position for limited range.
+- **bool setMPosition(uint16_t value)** set stop position for limited range a.k.a. MPOS.
 Value = 0..4095. Returns false if parameter is out of range.
 One need to wait at least 1 ms after writing MPOS (see BURN section datasheet).
 - **uint16_t getMPosition()** get current stop position.
-- **bool setMaxAngle(uint16_t value)** set limited range.
+- **bool setMaxAngle(uint16_t value)** set limited range a.k.a. MANG.
 Value = 0..4095. Returns false if parameter is out of range.
 See datasheet **Angle Programming**
 - **uint16_t getMaxAngle()** get limited range.
@@ -297,9 +316,10 @@ See datasheet **Angle Programming**
 
 Please read datasheet for details.
 
-- **bool setConfiguration(uint16_t value)** value == 0..0x3FFF
+- **bool setConfiguration(uint16_t value)** value == 0..0x3FFF (two bits not used).
 Access the register as bit mask.
-Returns false if parameter is out of range.
+Returns false if parameter is out of range (> 0x3FFF).
+Individual fields are not checked with this call.
 - **uint16_t getConfiguration()** returns the current configuration register a bit mask.
 
 
@@ -317,7 +337,7 @@ Returns false if parameter is out of range.
 
 The library has functions to address these fields directly.
 
-The setters() returns false if parameter is out of range.
+These setters() returns false if the parameter is out of range.
 
 - **bool setPowerMode(uint8_t powerMode)**
 - **uint8_t getPowerMode()**
@@ -339,10 +359,10 @@ In a way one is trading precision for stability.
 
 **resetPOR() is experimental** to be tested.
 
-- **void resetPOR()** read back the values from non-volatile RAM.
+- **void resetPOR()** reads back the values from non-volatile RAM.
 Should work as a Power On Reset, undo the runtime changes in the configuration
 and other registers stored in non-volatile RAM.
-  - MANG, ZPOS, MPOS, CONFIG, I2CADDR (as5600L only)
+  - possibly affects MANG, ZPOS, MPOS, CONFIG, I2CADDR (as5600L only)
 
 
 ### Read Angle
@@ -354,7 +374,7 @@ or use AS5600_RAW_TO_RADIANS if needed.
 Conversion factor AS5600_RAW_TO_DEGREES = 360 / 4096 = 0.087890625
 or use AS5600_RAW_TO_RADIANS if needed.
 The value of this register can be affected by the configuration bits above.
-This is the one most used.
+This is the most used call.
 - **bool setOffset(float degrees)** overwrites the **existing** offset.
 It sets an offset in degrees, e.g. to calibrate the sensor after mounting.
 Typical values are -359.99 - 359.99 probably smaller.
@@ -362,12 +382,12 @@ Larger values will be mapped back to this interval.
 Be aware that larger values will affect / decrease the precision of the
 measurements as floats have only 7 significant digits.
 Verify this for your application.
-Returns false if **degrees** > 360000.
+Returns false if **abs(degrees)** > 360000.
 - **float getOffset()** returns offset in degrees.
 - **bool increaseOffset(float degrees)** adds degrees to the **existing** offset.
 If **setOffset(20)** is called first and **increaseOffset(-30)** thereafter the
 new offset is -10 degrees.
-Returns false if **degrees** > 360000.
+Returns false if **abs(degrees)** > 360000.
 
 In issue #14 there is a discussion about **setOffset()**.
 A possible implementation is to ignore all values outside the
@@ -411,9 +431,11 @@ or once per second to get a reasonably precision.
 
 |  mode                 |  value  |  description   |  notes  |
 |:----------------------|:-------:|:---------------|:--------|
-|  AS5600_MODE_RADIANS  |    1    |  radians /sec  |         |
-|  AS5600_MODE_DEGREES  |    0    |  degrees /sec  | default |
-|  other                |    -    |  degrees /sec  |         |
+|  AS5600_MODE_RPS      |    3    |   rounds /sec  |
+|  AS5600_MODE_RPM      |    2    |   rounds /min  |
+|  AS5600_MODE_RADIANS  |    1    |  radians /sec  |
+|  AS5600_MODE_DEGREES  |    0    |  degrees /sec  |  default
+|  other                |    -    |  degrees /sec  |
 
 Negative return values indicate reverse rotation.
 What that exactly means depends on the setup of your project.
@@ -430,6 +452,8 @@ Also if one wants to detect minute movements, calling it more often is the way t
 An alternative implementation is possible in which the angle is measured twice
 with a short interval. The only limitation then is that both measurements
 should be within 180° = half a rotation.
+
+For other angle units use - https://github.com/RobTillaart/AngleConvertor
 
 
 ### Cumulative position
@@ -515,7 +539,7 @@ Use with care.
 - **uint16_t readMagnitude()** reads the current internal magnitude.
 (page 9 datasheet)
 Scale is unclear, can be used as relative scale.
-- **bool detectMagnet()** returns true if device sees a magnet.
+- **bool magnetDetected()** returns true if device sees a magnet.
 - **bool magnetTooStrong()** idem.
 - **bool magnetTooWeak()** idem.
 
@@ -727,6 +751,8 @@ float angle     = (dutyCycle - 0.0294) * (359.9 / (0.9706 - 0.0294));
 The AS5600 allows one to set the PWM base frequency (~5%)
 - **bool setPWMFrequency(uint8_t pwmFreq)**
 
+indicative table, see page 25-27
+
 |  mode  |  pwmFreq  |  step in us  |  1° in time  |
 |:------:|:---------:|:------------:|:------------:|
 |   0    |  115 Hz   |     2.123    |    24.15     |
@@ -743,6 +769,11 @@ When PWM OUT is selected **readAngle()** will still return valid values.
 
 
 ----
+
+# AS5600L
+
+Most important changes only.
+
 
 ## AS5600L class
 
@@ -771,7 +802,9 @@ These functions seems to have only a function in relation to **setAddress()**
 so possibly obsolete in the future.
 If you got other insights on these functions please let me know.
 
+
 ----
+
 
 ## Operational
 
@@ -815,7 +848,9 @@ priority is relative.
 - rename functions
   - bool setConfiguration(uint16_t value);  // remove setConfigure() 0.7.0
   - uint16_t getConfiguration();            // remove getConfigure() 0.7.0
-  - revolution functions (to what?)
+  - revolution functions - to what?
+  - detectMagnet ==> magnetDetected         //  0.7.0
+
 
 #### Should
 

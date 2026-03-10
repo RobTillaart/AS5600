@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add **void resetPOR()** read back from non volatile RAM.
 - add **setConfiguration()** // replaces setConfigure in 0.7.0
 - add **getConfiguration()** // idem
+- add **magnetDetected()** //  replaces detectMagnet in 0.7.0
+- add **AS5600_MODE_RPS** rounds / rotations per second mode
 - remove "older experimental tags"
 - update examples (configuration calls)
 - update readme.md

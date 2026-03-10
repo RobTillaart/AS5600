@@ -45,7 +45,7 @@ void loop()
   Serial.print("MAGNET:\t ");
   Serial.println(as5600.readMagnitude(), HEX);
   Serial.print("DETECT:\t ");
-  Serial.println(as5600.detectMagnet(), HEX);
+  Serial.println(as5600.magnetDetected(), HEX);
   Serial.print("M HIGH:\t ");
   Serial.println(as5600.magnetTooStrong(), HEX);
   Serial.print("M  LOW:\t ");

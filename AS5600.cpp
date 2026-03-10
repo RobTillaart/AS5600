@@ -390,7 +390,7 @@ uint16_t AS5600::readMagnitude()
 }
 
 
-bool AS5600::detectMagnet()
+bool AS5600::magnetDetected()
 {
   return (readStatus() & AS5600_MAGNET_DETECT) > 1;
 }

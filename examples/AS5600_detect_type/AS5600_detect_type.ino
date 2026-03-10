@@ -78,7 +78,7 @@ void loop()
     Serial.print("MAGNET:\t ");
     Serial.println(device.readMagnitude(), HEX);
     Serial.print("DETECT:\t ");
-    Serial.println(device.detectMagnet(), HEX);
+    Serial.println(device.magnetDetected(), HEX);
     Serial.print("M HIGH:\t ");
     Serial.println(device.magnetTooStrong(), HEX);
     Serial.print("M  LOW:\t ");
@@ -102,7 +102,7 @@ void loop()
     Serial.print("MAGNET:\t ");
     Serial.println(device.readMagnitude(), HEX);
     Serial.print("DETECT:\t ");
-    Serial.println(device.detectMagnet(), HEX);
+    Serial.println(device.magnetDetected(), HEX);
     Serial.print("M HIGH:\t ");
     Serial.println(device.magnetTooStrong(), HEX);
     Serial.print("M  LOW:\t ");

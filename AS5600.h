@@ -31,11 +31,13 @@ const float   AS5600_DEGREES_TO_RAW     = 4096 / 360.0;
 const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4096;
 //  4.06901041666666e-6
 const float   AS5600_RAW_TO_RPM         = 60.0 / 4096;
+const float   AS5600_RAW_TO_RPS         = 1.0 / 4096;
 
 //  getAngularSpeed
 const uint8_t AS5600_MODE_DEGREES       = 0;
 const uint8_t AS5600_MODE_RADIANS       = 1;
 const uint8_t AS5600_MODE_RPM           = 2;
+const uint8_t AS5600_MODE_RPS           = 3;
 
 
 //  ERROR CODES
@@ -214,7 +216,9 @@ public:
   uint16_t readMagnitude();
 
   //  access detail status register
-  bool     detectMagnet();
+  [[deprecated("use magnetDetected()")]]
+  bool     detectMagnet() { return magnetDetected(); };
+  bool     magnetDetected();
   bool     magnetTooStrong();
   bool     magnetTooWeak();
 
@@ -228,12 +232,14 @@ public:
   //  void burnSetting();
 
 
-  //  EXPERIMENTAL 0.1.2 - to be tested.
-  //  approximation of the angular speed in rotations per second.
-  //  mode == 1: radians /second
-  //  mode == 0: degrees /second  (default)
+  //  approximation of the angular speed
+  //  mode == 3 AS5600_MODE_RPS:     rounds per second.
+  //  mode == 2 AS5600_MODE_RPM:     rounds per minute.
+  //  mode == 1 AS5600_MODE_RADIANS: radians /second
+  //  mode == 0 AS5600_MODE_DEGREES: degrees /second  (default)
   float    getAngularSpeed(uint8_t mode = AS5600_MODE_DEGREES,
                            bool update = true);
+
 
   //  EXPERIMENTAL CUMULATIVE POSITION
   //  reads sensor and updates cumulative position
