@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add **getConfiguration()** // idem
 - add **magnetDetected()** //  replaces detectMagnet in 0.7.0
 - add **AS5600_MODE_RPS** rounds / rotations per second mode
+- fix **AS5600_RAW_TO_RPM** constant.
 - remove "older experimental tags"
 - update examples (configuration calls)
 - update readme.md
