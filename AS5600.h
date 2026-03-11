@@ -26,11 +26,13 @@ const uint8_t AS5600_COUNTERCLOCK_WISE  = 1;  //  HIGH
 
 //  0.087890625;
 const float   AS5600_RAW_TO_DEGREES     = 360.0 / 4096;
+//  11,37777778;
 const float   AS5600_DEGREES_TO_RAW     = 4096 / 360.0;
 //  0.00153398078788564122971808758949;
-const float   AS5600_RAW_TO_RADIANS     = PI * 2.0 / 4096;
+const float   AS5600_RAW_TO_RADIANS     = (PI * 2.0) / 4096;
 //  4.06901041666666e-6
-const float   AS5600_RAW_TO_RPM         = 60.0 / 4096;
+const float   AS5600_RAW_TO_RPM         = (1.0 / 4096) / 60;
+//  0.000244140625
 const float   AS5600_RAW_TO_RPS         = 1.0 / 4096;
 
 //  getAngularSpeed
