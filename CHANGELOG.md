@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - remove "older experimental tags"
 - update examples (configuration calls)
 - update readme.md
+- update unit tests
 - update GitHub actions
 - minor edits
 
